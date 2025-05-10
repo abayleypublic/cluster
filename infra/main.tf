@@ -1,3 +1,5 @@
+# Adapted from https://cloud.google.com/docs/terraform/resource-management/store-state
+
 resource "random_id" "default" {
   byte_length = 8
 }
