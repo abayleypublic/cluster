@@ -21,6 +21,15 @@ resource "oci_core_internet_gateway" "internet_gateway" {
   display_name   = "cluster_internet_gateway"
 }
 
+resource "oci_core_default_dhcp_options" "vcn_dhcp" {
+  manage_default_resource_id = oci_core_vcn.cluster_vcn.default_dhcp_options_id
+
+  options {
+    type       = "DomainNameServer"
+    server_type = "VcnLocalPlusInternet"
+  }
+}
+
 # ==========
 # Public 
 # ==========
@@ -47,7 +56,6 @@ resource "oci_core_subnet" "public_subnet" {
   prohibit_public_ip_on_vnic = false
   security_list_ids          = [oci_core_security_list.public_sg.id]
 }
-
 
 resource "oci_core_security_list" "public_sg" {
   compartment_id = oci_identity_compartment.cluster.id

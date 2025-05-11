@@ -18,7 +18,7 @@ tasks:
     requires:
       vars: [OCID]
     cmds:
-      - oci compute image list --compartment-id {{.OCID}} --operating-system "Canonical Ubuntu" --shape "VM.Standard.A1.Flex" --output table
+      - oci compute image list --compartment-id {{.OCID}} --operating-system "Oracle Linux" --shape "VM.Standard.A1.Flex" --output table
 
   create-session:
     desc: Create a session with the bastion host for debugging
