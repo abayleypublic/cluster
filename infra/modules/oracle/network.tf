@@ -49,7 +49,7 @@ resource "oci_core_route_table" "public_rt" {
 resource "oci_core_subnet" "public_subnet" {
   compartment_id             = oci_identity_compartment.cluster.id
   vcn_id                     = oci_core_vcn.cluster_vcn.id
-  cidr_block                 = "10.0.1.0/24"
+  cidr_block                 = "10.0.128.0/24"
   display_name               = "public_subnet"
   dns_label                  = "publicsubnet"
   route_table_id             = oci_core_route_table.public_rt.id
@@ -82,6 +82,16 @@ resource "oci_core_security_list" "public_sg" {
     }
   }
 
+  # Kubernetes API server
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "0.0.0.0/0"
+    tcp_options {
+      min = 6443
+      max = 6443
+    }
+  }
+
   egress_security_rules {
     protocol    = "all"
     destination = "0.0.0.0/0"
@@ -107,7 +117,7 @@ resource "oci_core_route_table" "private_rt" {
 resource "oci_core_subnet" "private_subnet" {
   compartment_id             = oci_identity_compartment.cluster.id
   vcn_id                     = oci_core_vcn.cluster_vcn.id
-  cidr_block                 = "10.0.2.0/24"
+  cidr_block                 = "10.0.0.0/17"
   display_name               = "private_subnet"
   dns_label                  = "privatesubnet"
   route_table_id             = oci_core_route_table.private_rt.id
@@ -160,6 +170,16 @@ resource "oci_core_security_list" "private_sg" {
     }
   }
 
+  # Metrics Server
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "10.0.0.0/16"
+    tcp_options {
+      min = 10250
+      max = 10250
+    }
+  }
+
   egress_security_rules {
     protocol    = "all"
     destination = "0.0.0.0/0"
@@ -184,8 +204,10 @@ resource "oci_load_balancer_load_balancer" "k3s_lb" {
   }
 }
 
-resource "oci_load_balancer_backend_set" "k3s_backend_set" {
-  name             = "k3s_backend_set"
+# HTTP Backend Set
+
+resource "oci_load_balancer_backend_set" "k3s_https_backend_set" {
+  name             = "k3s_https_backend_set"
   load_balancer_id = oci_load_balancer_load_balancer.k3s_lb.id
   policy           = "ROUND_ROBIN"
 
@@ -195,19 +217,49 @@ resource "oci_load_balancer_backend_set" "k3s_backend_set" {
   }
 }
 
-resource "oci_load_balancer_backend" "k3s_backends" {
+resource "oci_load_balancer_backend" "k3s_https_backends" {
   for_each = oci_core_instance.server
 
   load_balancer_id = oci_load_balancer_load_balancer.k3s_lb.id
-  backendset_name  = oci_load_balancer_backend_set.k3s_backend_set.name
+  backendset_name  = oci_load_balancer_backend_set.k3s_https_backend_set.name
   ip_address       = each.value.private_ip
   port             = 30443
 }
 
-resource "oci_load_balancer_listener" "k3s_tls_listener" {
+resource "oci_load_balancer_listener" "k3s_https_listener" {
   name                     = "k3s_https_forward"
   load_balancer_id         = oci_load_balancer_load_balancer.k3s_lb.id
-  default_backend_set_name = oci_load_balancer_backend_set.k3s_backend_set.name
+  default_backend_set_name = oci_load_balancer_backend_set.k3s_https_backend_set.name
   port                     = 443
+  protocol                 = "TCP"
+}
+
+# API Backend Set
+
+resource "oci_load_balancer_backend_set" "k3s_api_backend_set" {
+  name             = "k3s_api_backend_set"
+  load_balancer_id = oci_load_balancer_load_balancer.k3s_lb.id
+  policy           = "ROUND_ROBIN"
+
+  health_checker {
+    protocol = "TCP"
+    port     = 6443
+  }
+}
+
+resource "oci_load_balancer_backend" "k3s_api_backends" {
+  for_each = oci_core_instance.server
+
+  load_balancer_id = oci_load_balancer_load_balancer.k3s_lb.id
+  backendset_name  = oci_load_balancer_backend_set.k3s_api_backend_set.name
+  ip_address       = each.value.private_ip
+  port             = 6443
+}
+
+resource "oci_load_balancer_listener" "k3s_api_listener" {
+  name                     = "k3s_api_forward"
+  load_balancer_id         = oci_load_balancer_load_balancer.k3s_lb.id
+  default_backend_set_name = oci_load_balancer_backend_set.k3s_api_backend_set.name
+  port                     = 6443
   protocol                 = "TCP"
 }

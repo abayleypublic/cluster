@@ -25,4 +25,4 @@ tasks:
     requires:
       vars: [BASTION_ID, RESOURCE_ID, PRIVATE_IP]
     cmds:
-      - oci bastion session create-managed-ssh --bastion-id {{ .BASTION_ID }} --target-resource-id {{ .RESOURCE_ID }} --target-private-ip {{ .PRIVATE_IP }} --ssh-public-key-file ~/.ssh/id_rsa.pub --display-name "k3s-debug" --target-os-username ubuntu
+      - oci bastion session create-managed-ssh --bastion-id {{ .BASTION_ID }} --target-resource-id {{ .RESOURCE_ID }} --target-private-ip {{ .PRIVATE_IP }} --ssh-public-key-file ~/.ssh/id_rsa.pub --display-name "k3s-debug" --target-os-username opc --session-ttl 10800

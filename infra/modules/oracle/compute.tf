@@ -12,7 +12,7 @@ resource "oci_core_instance" "server" {
 
   shape = "VM.Standard.A1.Flex"
   shape_config {
-    memory_in_gbs = 4
+    memory_in_gbs = 8
     ocpus         = 2
     vcpus         = 2
   }
@@ -59,7 +59,7 @@ resource "oci_core_instance" "ampere_agent" {
 
   shape = "VM.Standard.A1.Flex"
   shape_config {
-    memory_in_gbs = 10
+    memory_in_gbs = 8
     ocpus         = 1
     vcpus         = 1
   }
