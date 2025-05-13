@@ -1,0 +1,12 @@
+namespaceOverride: kube-system
+
+operator:
+  replicas: 1
+
+kubeProxyReplacement: true
+
+gatewayAPI:
+  enabled: true
+
+envoy:
+  enabled: true

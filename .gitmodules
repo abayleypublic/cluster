@@ -1,0 +1,3 @@
+[submodule "submodules/cilium"]
+	path = submodules/cilium
+	url = https://github.com/cilium/cilium

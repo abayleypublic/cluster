@@ -26,3 +26,14 @@ tasks:
       vars: [BASTION_ID, RESOURCE_ID, PRIVATE_IP]
     cmds:
       - oci bastion session create-managed-ssh --bastion-id {{ .BASTION_ID }} --target-resource-id {{ .RESOURCE_ID }} --target-private-ip {{ .PRIVATE_IP }} --ssh-public-key-file ~/.ssh/id_rsa.pub --display-name "k3s-debug" --target-os-username opc --session-ttl 10800
+
+  install-cilium:
+    desc: Install or upgrade Cilium Helm chart
+    dir: helm/cilium
+    cmds:
+      - helm upgrade --install -f values.yaml cilium ./chart
+
+  uninstall-cilium:
+    desc: Install Cilium Helm chart
+    cmds:
+      - helm uninstall cilium
