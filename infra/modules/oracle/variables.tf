@@ -32,6 +32,6 @@ variable "ampere_agent_nodes" {
 
 variable "ampere_image_id" {
   type = string
-  # Canonical-Ubuntu-24.04-aarch64-2025.03.28-0
-  default = "ocid1.image.oc1.uk-london-1.aaaaaaaasyryy6yl64a6sd4535q4uqyhueuaxfevvig3hp3357vslx3qev7q"
+  # Oracle-Linux-9.5-aarch64-2025.04.16-0
+  default = "ocid1.image.oc1.uk-london-1.aaaaaaaak22i3h6gjiho2iwpfhhgmei7yp4ynveuxzujg7ozudbkel5aadxa"
 }
