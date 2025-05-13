@@ -1,6 +1,10 @@
 version: "3"
 
 tasks:
+  # ==========
+  # Terraform
+  # ==========
+
   plan-infra:
     dir: infra
     desc: Plan infra
@@ -12,6 +16,10 @@ tasks:
     desc: Apply infra
     cmds:
       - terraform apply -var-file="../.tfvars"
+
+  # ==========
+  # OCI
+  # ==========
 
   get-ampere-images:
     desc: Get availble images for Ampere machines
@@ -27,16 +35,36 @@ tasks:
     cmds:
       - oci bastion session create-managed-ssh --bastion-id {{ .BASTION_ID }} --target-resource-id {{ .RESOURCE_ID }} --target-private-ip {{ .PRIVATE_IP }} --ssh-public-key-file ~/.ssh/id_rsa.pub --display-name "k3s-debug" --target-os-username opc --session-ttl 10800
 
-  install-cilium:
+  # ==========
+  # Helm
+  # ==========
+
+  upgrade-cilium:
     desc: Install or upgrade Cilium Helm chart
     dir: helm/cilium
     cmds:
-      - helm upgrade --install -f values.yaml cilium ./chart
+      - helm upgrade --install -f values.yaml --namespace=kube-system cilium ./chart
 
   uninstall-cilium:
     desc: Install Cilium Helm chart
     cmds:
       - helm uninstall cilium
+
+  upgrade-cert-manager:
+    desc: Install or upgrade Cert Manager Helm chart
+    dir: helm/cert-manager
+    cmds:
+      - helm repo add jetstack https://charts.jetstack.io --force-update
+      - helm upgrade --install -f values.yaml --create-namespace --namespace=cert-manager --version v1.17.2 cert-manager jetstack/cert-manager
+
+  uninstall-cert-manager:
+    desc: Install Cert Manager Helm chart
+    cmds:
+      - helm uninstall cert-manager
+
+  # ==========
+  # Runtime
+  # ==========
 
   hubble-ui:
     desc: Show observability for cluster
