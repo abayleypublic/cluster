@@ -37,3 +37,8 @@ tasks:
     desc: Install Cilium Helm chart
     cmds:
       - helm uninstall cilium
+
+  hubble-ui:
+    desc: Show observability for cluster
+    cmds:
+      - cilium hubble ui
