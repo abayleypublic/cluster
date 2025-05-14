@@ -39,6 +39,13 @@ tasks:
   # Helm
   # ==========
 
+  upgrade-all:
+    desc: Install or upgrade all Helm charts
+    cmds:
+      - task: upgrade-cilium
+      - task: upgrade-cert-manager
+      - task: upgrade-external-secrets
+
   upgrade-cilium:
     desc: Install or upgrade Cilium Helm chart
     dir: helm/cilium
@@ -61,6 +68,19 @@ tasks:
     desc: Install Cert Manager Helm chart
     cmds:
       - helm uninstall cert-manager
+
+  upgrade-external-secrets:
+    desc: Install or upgrade External Secrets Helm chart
+    dir: helm/external-secrets
+    cmds:
+      - kubectl apply -f ./crds/bundle.yaml
+      - helm dependency build ./chart
+      - helm upgrade --install -f values.yaml --create-namespace --namespace=external-secrets external-secrets ./chart
+
+  uninstall-external-secrets:
+    desc: Install External Secrets Helm chart
+    cmds:
+      - helm uninstall external-secrets
 
   # ==========
   # Runtime

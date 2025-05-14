@@ -1,0 +1,4 @@
+replicas: 1
+
+# This isn't working when true so installing manually
+installCRDs: false
