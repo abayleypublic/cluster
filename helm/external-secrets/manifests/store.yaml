@@ -5,5 +5,6 @@ metadata:
 spec:
   provider:
     oracle:
-      vault: "ocid1.vault.oc1.uk-london-1.eruckcfxaaarq.abwgiljsf5ckladyqmxmnjo2zgc6sdymeqsic3ydbgrhuj7l2ulhl7k7mgda"
-      region: "UK-LONDON-1"
+      vault: ocid1.vault.oc1.uk-london-1.eruckcfxaaarq.abwgiljsf5ckladyqmxmnjo2zgc6sdymeqsic3ydbgrhuj7l2ulhl7k7mgda
+      region: "uk-london-1"
+      principalType: InstancePrincipal

@@ -185,8 +185,8 @@ resource "oci_core_security_list" "private_sg" {
     protocol = "6" # TCP
     source   = "10.0.128.0/24" 
     tcp_options {
-      min = 443
-      max = 443
+      min = 1024
+      max = 1024
     }
   }
 
@@ -223,7 +223,7 @@ resource "oci_load_balancer_backend_set" "k3s_https_backend_set" {
 
   health_checker {
     protocol = "TCP"
-    port     = 443
+    port     = 1024
   }
 }
 
@@ -232,7 +232,7 @@ resource "oci_load_balancer_backend" "k3s_https_backends" {
   load_balancer_id = oci_load_balancer_load_balancer.k3s_lb.id
   backendset_name  = oci_load_balancer_backend_set.k3s_https_backend_set.name
   ip_address       = each.value.private_ip
-  port             = 443
+  port             = 1024
 }
 
 resource "oci_load_balancer_listener" "k3s_https_listener" {

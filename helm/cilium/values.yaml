@@ -1,18 +1,14 @@
 namespaceOverride: kube-system
 
-operator:
-  replicas: 1
-  clusterPoolIPv4PodCIDRList:
-    - 10.0.0.0/18
-  clusterPoolIPv4MaskSize: 24
-
 kubeProxyReplacement: true
 
 gatewayAPI:
   enabled: true
+  hostNetwork:
+    enabled: true
 
 envoy:
-  enabled: false
+  enabled: true
 
 hubble:
   relay:
