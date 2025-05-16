@@ -1,14 +1,40 @@
 # cluster
 
-**Populate properly later**
+## TODO
+
+- Document properly
+- Ensure firewall rules are up to date
+- Review security posture
 
 ## Design
 
 ### Decisions
 
-Using k3s script install instead of a Terraform provider because...
+k3s script rather than using provider
 
-Using Loadbalancer of IP 10.0.64.50 as Cilium Gateway
+- Provider would be tricky due to use of a private subnet & Bastion host
+- Maintenance burden not large as not mission critical & config setup to allow for easy rebuilds
+
+Cilium:
+
+- Host network, single gateway exposed on port 1024 as it is not privileged
+- Tried Nodeport but was too random & couldn't be controlled
+- Didn't want to align too tightly with OCI loadbalancer
+
+OCI Secret Vault
+
+- Had to explicitly allow compute instances access
+- This is useful as otherwise I end up in a paradox of needing to store credentials to be able to setup & be able to read credentials
+
+Argo
+
+- Auth with Github to save me somehow losing the password
+
+Networking
+
+- Single domain so wildcard & pass all requests through
+- Cluster on private subnet
+- Loadbalancer on public subnet
 
 ## Install
 
