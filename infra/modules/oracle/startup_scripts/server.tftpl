@@ -9,7 +9,7 @@ curl -sfL https://get.k3s.io | K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) 
   --cluster-dns 10.0.64.10 \
   --tls-san $(hostname -I | awk '{print $1}') \
   --tls-san ${lb_ip} \
-  --tls-san k3s.austinbayley.co.uk \
+  --tls-san kube.austinbayley.co.uk \
   --flannel-backend=none \
   --disable-network-policy \
   --disable traefik 

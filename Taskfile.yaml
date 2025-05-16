@@ -50,7 +50,14 @@ tasks:
     desc: Install or upgrade Cilium Helm chart
     dir: helm/cilium
     cmds:
+      - kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.2.0/config/crd/standard/gateway.networking.k8s.io_gatewayclasses.yaml
+      - kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.2.0/config/crd/standard/gateway.networking.k8s.io_gateways.yaml
+      - kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.2.0/config/crd/standard/gateway.networking.k8s.io_httproutes.yaml
+      - kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.2.0/config/crd/standard/gateway.networking.k8s.io_referencegrants.yaml
+      - kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.2.0/config/crd/standard/gateway.networking.k8s.io_grpcroutes.yaml
+      - kubectl apply -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.2.0/config/crd/experimental/gateway.networking.k8s.io_tlsroutes.yaml
       - helm upgrade --install -f values.yaml --namespace=kube-system cilium ./chart
+      - kubectl apply -f ./manifests/gateway.yaml
 
   uninstall-cilium:
     desc: Install Cilium Helm chart
@@ -76,11 +83,28 @@ tasks:
       - kubectl apply -f ./crds/bundle.yaml
       - helm dependency build ./chart
       - helm upgrade --install -f values.yaml --create-namespace --namespace=external-secrets external-secrets ./chart
+      - kubectl apply -f ./manifests/store.yaml
 
   uninstall-external-secrets:
     desc: Install External Secrets Helm chart
     cmds:
       - helm uninstall external-secrets
+
+  upgrade-argocd:
+    desc: Install or upgrade ArgoCD Helm chart
+    dir: helm/argocd
+    cmds:
+      - kubectl create namespace argocd --dry-run=client -o yaml | kubectl apply -f -
+      - kubectl apply -f ./manifests/secrets.yaml
+      - helm repo add dandydeveloper https://dandydeveloper.github.io/charts/ --force-update
+      - helm dependency build ./chart
+      - helm upgrade --install -f values.yaml --create-namespace --namespace=argocd argocd ./chart
+      - kubectl apply -f ./manifests/route.yaml
+
+  uninstall-argocd:
+    desc: Install ArgoCD Helm chart
+    cmds:
+      - helm uninstall argocd
 
   # ==========
   # Runtime

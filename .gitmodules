@@ -4,3 +4,6 @@
 [submodule "submodules/external-secrets"]
 	path = submodules/external-secrets
 	url = https://github.com/external-secrets/external-secrets.git
+[submodule "submodules/argo"]
+	path = submodules/argo
+	url = https://github.com/argoproj/argo-helm.git
