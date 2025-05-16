@@ -1,5 +1,8 @@
 namespaceOverride: kube-system
 
+operator:
+  replicas: 1
+
 kubeProxyReplacement: true
 
 gatewayAPI:
