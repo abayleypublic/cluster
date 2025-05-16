@@ -180,6 +180,16 @@ resource "oci_core_security_list" "private_sg" {
     }
   }
 
+  # Cilium Gateway 
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "10.0.128.0/24" 
+    tcp_options {
+      min = 443
+      max = 443
+    }
+  }
+
   egress_security_rules {
     protocol    = "all"
     destination = "0.0.0.0/0"
@@ -213,17 +223,16 @@ resource "oci_load_balancer_backend_set" "k3s_https_backend_set" {
 
   health_checker {
     protocol = "TCP"
-    port     = 30443
+    port     = 443
   }
 }
 
 resource "oci_load_balancer_backend" "k3s_https_backends" {
   for_each = oci_core_instance.server
-
   load_balancer_id = oci_load_balancer_load_balancer.k3s_lb.id
   backendset_name  = oci_load_balancer_backend_set.k3s_https_backend_set.name
   ip_address       = each.value.private_ip
-  port             = 30443
+  port             = 443
 }
 
 resource "oci_load_balancer_listener" "k3s_https_listener" {

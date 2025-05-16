@@ -1,0 +1,15 @@
+apiVersion: gateway.networking.k8s.io/v1alpha2
+kind: TLSRoute
+metadata:
+  name: argocd-tls-route
+  namespace: argocd
+spec:
+  parentRefs:
+    - name: cilium-gateway
+      namespace: kube-system
+  hostnames:
+    - "argocd.austinbayley.co.uk"
+  rules:
+    - backendRefs:
+        - name: argocd-server
+          port: 443

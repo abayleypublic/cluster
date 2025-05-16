@@ -1,0 +1,15 @@
+global:
+  domain: argocd.austinbayley.co.uk
+
+configs:
+  cm:
+    dex.config: |
+      connectors:
+        - type: github
+          id: github
+          name: GitHub
+          config:
+            clientID: Iv23lidURGmEy1jsqZ1z
+            clientSecret: $github-client-secret:value
+            orgs:
+            - name: abayleypublic
