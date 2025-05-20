@@ -14,7 +14,7 @@ configs:
             orgs:
               - name: abayleyportfolio
 
-  policy:
-    csv: |
+  rbac:
+    policy.default: role:readonly
+    policy.csv: |
       g, github:abayleypublic, role:admin
-      policy.default: role:readonly

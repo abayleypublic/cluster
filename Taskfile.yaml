@@ -45,6 +45,7 @@ tasks:
       - task: upgrade-cilium
       - task: upgrade-cert-manager
       - task: upgrade-external-secrets
+      - task: upgrade-argocd
 
   upgrade-cilium:
     desc: Install or upgrade Cilium Helm chart
