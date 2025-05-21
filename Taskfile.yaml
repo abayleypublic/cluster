@@ -101,6 +101,7 @@ tasks:
       - helm dependency build ./chart
       - helm upgrade --install -f values.yaml --create-namespace --namespace=argocd argocd ./chart
       - kubectl apply -f ./manifests/route.yaml
+      - kubectl apply -f ./manifests/apps.yaml
 
   uninstall-argocd:
     desc: Install ArgoCD Helm chart
