@@ -38,12 +38,43 @@ resource "oci_vault_secret" "argocd_github_client_secret" {
     vault_id = oci_kms_vault.secret_vault.id
 
     secret_content {
-      # This is apparently the only content type available but is not enforced
-      # for new secret versions which is what this will be used for...strange
       content_type = "BASE64"
+      content = "UkVQTEFDRV9NRQ=="
+    }
+}
 
-      # Apparently a value is required too
-      # This is the base64 encoded value of "REPLACE_ME"
+resource "oci_vault_secret" "k3s_ca_certificate" {
+    compartment_id = oci_identity_compartment.cluster.id
+    key_id = oci_kms_key.master_encryption_key.id
+    secret_name = "k3s_ca_certificate"
+    vault_id = oci_kms_vault.secret_vault.id
+
+    secret_content {
+      content_type = "BASE64"
+      content = "UkVQTEFDRV9NRQ=="
+    }
+}
+
+resource "oci_vault_secret" "k3s_client_certificate" {
+    compartment_id = oci_identity_compartment.cluster.id
+    key_id = oci_kms_key.master_encryption_key.id
+    secret_name = "k3s_client_certificate"
+    vault_id = oci_kms_vault.secret_vault.id
+
+    secret_content {
+      content_type = "BASE64"
+      content = "UkVQTEFDRV9NRQ=="
+    }
+}
+
+resource "oci_vault_secret" "k3s_client_key" {
+    compartment_id = oci_identity_compartment.cluster.id
+    key_id = oci_kms_key.master_encryption_key.id
+    secret_name = "k3s_client_key"
+    vault_id = oci_kms_vault.secret_vault.id
+
+    secret_content {
+      content_type = "BASE64"
       content = "UkVQTEFDRV9NRQ=="
     }
 }
