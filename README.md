@@ -5,6 +5,8 @@
 - Document properly
 - Ensure firewall rules are up to date
 - Review security posture
+- Loadbalancer address Cloudflare
+- Email routing Cloudflare
 
 ## Design
 

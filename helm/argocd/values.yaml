@@ -2,6 +2,9 @@ global:
   domain: argocd.austinbayley.co.uk
 
 configs:
+  params:
+    server.insecure: true
+
   cm:
     dex.config: |
       connectors:

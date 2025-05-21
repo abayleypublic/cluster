@@ -3,6 +3,8 @@ kind: Gateway
 metadata:
   name: cilium-gateway
   namespace: kube-system
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt
 spec:
   gatewayClassName: cilium
   listeners:
@@ -10,8 +12,12 @@ spec:
       hostname: "*.austinbayley.co.uk"
       port: 1024
       protocol: TLS
-      tls:
-        mode: Passthrough
       allowedRoutes:
         namespaces:
           from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: austinbayley-tls
+            kind: Secret
+            group: ""
