@@ -3,7 +3,6 @@
 ## TODO
 
 - Document properly
-- Ensure firewall rules are up to date
 - Review security posture
 
 ## Design
