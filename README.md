@@ -4,6 +4,8 @@
 
 - Document properly
 - Review security posture
+- Loadbalancer address Cloudflare
+- Email routing Cloudflare
 
 ## Design
 

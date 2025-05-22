@@ -229,7 +229,7 @@ resource "oci_core_security_list" "private_sg" {
       max = 9891
     }
   }
-  
+
   # Cilium Hubble GOPS Severs
   ingress_security_rules {
     protocol = "6"
