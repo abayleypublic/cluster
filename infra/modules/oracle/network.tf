@@ -25,7 +25,7 @@ resource "oci_core_default_dhcp_options" "vcn_dhcp" {
   manage_default_resource_id = oci_core_vcn.cluster_vcn.default_dhcp_options_id
 
   options {
-    type       = "DomainNameServer"
+    type        = "DomainNameServer"
     server_type = "VcnLocalPlusInternet"
   }
 }
@@ -183,7 +183,7 @@ resource "oci_core_security_list" "private_sg" {
   # Cilium Gateway 
   ingress_security_rules {
     protocol = "6" # TCP
-    source   = "10.0.128.0/24" 
+    source   = "10.0.128.0/24"
     tcp_options {
       min = 1024
       max = 1024
@@ -228,7 +228,7 @@ resource "oci_load_balancer_backend_set" "k3s_https_backend_set" {
 }
 
 resource "oci_load_balancer_backend" "k3s_https_backends" {
-  for_each = oci_core_instance.server
+  for_each         = oci_core_instance.server
   load_balancer_id = oci_load_balancer_load_balancer.k3s_lb.id
   backendset_name  = oci_load_balancer_backend_set.k3s_https_backend_set.name
   ip_address       = each.value.private_ip

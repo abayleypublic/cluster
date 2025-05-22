@@ -31,7 +31,7 @@ resource "oci_core_instance" "server" {
     ssh_authorized_keys = file("~/.ssh/id_rsa.pub")
 
     user_data = base64encode(templatefile("${path.module}/startup_scripts/server.tftpl", {
-      lb_ip = oci_load_balancer_load_balancer.k3s_lb.ip_address_details[0].ip_address
+      lb_ip     = oci_load_balancer_load_balancer.k3s_lb.ip_address_details[0].ip_address
       k3s_token = random_password.k3s_token.result
     }))
   }

@@ -33,6 +33,11 @@ terraform {
       source  = "oracle/oci"
       version = ">= 7.0.0"
     }
+
+    cloudflare = {
+      source  = "cloudflare/cloudflare"
+      version = "5.5.0"
+    }
   }
 }
 
@@ -44,7 +49,16 @@ provider "oci" {
   private_key_path = var.private_key_path
 }
 
+provider "cloudflare" {
+  api_token = var.cloudflare_api_key
+}
+
 module "cluster" {
   source         = "./modules/oracle"
   compartment_id = var.tenancy_ocid
+}
+
+module "dns" {
+  source    = "./modules/cloudflare"
+  public_ip = module.cluster.public_ip
 }
