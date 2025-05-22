@@ -25,7 +25,7 @@ resource "oci_core_default_dhcp_options" "vcn_dhcp" {
   manage_default_resource_id = oci_core_vcn.cluster_vcn.default_dhcp_options_id
 
   options {
-    type       = "DomainNameServer"
+    type        = "DomainNameServer"
     server_type = "VcnLocalPlusInternet"
   }
 }
@@ -61,16 +61,6 @@ resource "oci_core_security_list" "public_sg" {
   compartment_id = oci_identity_compartment.cluster.id
   vcn_id         = oci_core_vcn.cluster_vcn.id
   display_name   = "public_security_list"
-
-  # HTTP
-  ingress_security_rules {
-    protocol = "6" # TCP
-    source   = "0.0.0.0/0"
-    tcp_options {
-      min = 80
-      max = 80
-    }
-  }
 
   # TLS
   ingress_security_rules {
@@ -130,6 +120,76 @@ resource "oci_core_security_list" "private_sg" {
   vcn_id         = oci_core_vcn.cluster_vcn.id
   display_name   = "private_cluster_security_list"
 
+  # SSH
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "0.0.0.0/0"
+    tcp_options {
+      min = 22
+      max = 22
+    }
+  }
+
+  # Cilium Gateway 
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "10.0.128.0/24"
+    tcp_options {
+      min = 1024
+      max = 1024
+    }
+  }
+
+  # Cilium Health
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "10.0.0.0/17"
+    tcp_options {
+      min = 4240
+      max = 4240
+    }
+  }
+
+  # Cilium Hubble 
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "10.0.0.0/17"
+    tcp_options {
+      min = 4244
+      max = 4245
+    }
+  }
+
+  # Cilium Mutual Authentication
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "10.0.0.0/17"
+    tcp_options {
+      min = 4250
+      max = 4250
+    }
+  }
+
+  # Cilium Spire Agent health check 
+  ingress_security_rules {
+    protocol = "6"
+    source   = "10.0.0.0/17"
+    tcp_options {
+      min = 4251
+      max = 4251
+    }
+  }
+
+  # Cilium PPROF Servers
+  ingress_security_rules {
+    protocol = "6"
+    source   = "10.0.0.0/17"
+    tcp_options {
+      min = 6060
+      max = 6062
+    }
+  }
+
   # Kubernetes API server
   ingress_security_rules {
     protocol = "6" # TCP
@@ -140,33 +200,63 @@ resource "oci_core_security_list" "private_sg" {
     }
   }
 
-  # NodePort
-  ingress_security_rules {
-    protocol = "6" # TCP
-    source   = "10.0.0.0/16"
-    tcp_options {
-      min = 30000
-      max = 32767
-    }
-  }
-
   # VXLAN
   ingress_security_rules {
     protocol = "17" # UDP
-    source   = "10.0.0.0/16"
+    source   = "10.0.0.0/17"
     udp_options {
       min = 8472
       max = 8472
     }
   }
 
-  # SSH
+  # Cilium BPF Health Monitor
   ingress_security_rules {
-    protocol = "6" # TCP
-    source   = "0.0.0.0/0"
+    protocol = "6"
+    source   = "10.0.0.0/17"
     tcp_options {
-      min = 22
-      max = 22
+      min = 9878
+      max = 9879
+    }
+  }
+
+  # Cilium GOPS Severs
+  ingress_security_rules {
+    protocol = "6"
+    source   = "10.0.0.0/17"
+    tcp_options {
+      min = 9890
+      max = 9891
+    }
+  }
+  
+  # Cilium Hubble GOPS Severs
+  ingress_security_rules {
+    protocol = "6"
+    source   = "10.0.0.0/17"
+    tcp_options {
+      min = 9893
+      max = 9893
+    }
+  }
+
+  # Cilium Envoy Admin API 
+  ingress_security_rules {
+    protocol = "6"
+    source   = "10.0.0.0/17"
+    tcp_options {
+      min = 9901
+      max = 9901
+    }
+  }
+
+  # Cilium Prometheus metrics
+  ingress_security_rules {
+    protocol = "6"
+    source   = "10.0.0.0/17"
+    tcp_options {
+      min = 9962
+      max = 9964
     }
   }
 
@@ -180,13 +270,23 @@ resource "oci_core_security_list" "private_sg" {
     }
   }
 
-  # Cilium Gateway 
+  # NodePort
   ingress_security_rules {
     protocol = "6" # TCP
-    source   = "10.0.128.0/24" 
+    source   = "10.0.0.0/17"
     tcp_options {
-      min = 1024
-      max = 1024
+      min = 30000
+      max = 32767
+    }
+  }
+
+  # Cilium WireGuard encryption tunnel endpoint
+  ingress_security_rules {
+    protocol = "17" # UDP
+    source   = "10.0.0.0/17"
+    udp_options {
+      min = 51871
+      max = 51871
     }
   }
 
@@ -228,7 +328,7 @@ resource "oci_load_balancer_backend_set" "k3s_https_backend_set" {
 }
 
 resource "oci_load_balancer_backend" "k3s_https_backends" {
-  for_each = oci_core_instance.server
+  for_each         = oci_core_instance.server
   load_balancer_id = oci_load_balancer_load_balancer.k3s_lb.id
   backendset_name  = oci_load_balancer_backend_set.k3s_https_backend_set.name
   ip_address       = each.value.private_ip
