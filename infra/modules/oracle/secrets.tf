@@ -73,20 +73,20 @@ resource "oci_vault_secret" "k3s_client_key" {
   secret_name    = "k3s_client_key"
   vault_id       = oci_kms_vault.secret_vault.id
 
-    secret_content {
-      content_type = "BASE64"
-      content = "UkVQTEFDRV9NRQ=="
-    }
+  secret_content {
+    content_type = "BASE64"
+    content      = "UkVQTEFDRV9NRQ=="
+  }
 }
 
 resource "oci_vault_secret" "cloudflare_api_key" {
-    compartment_id = oci_identity_compartment.cluster.id
-    key_id = oci_kms_key.master_encryption_key.id
-    secret_name = "cloudflare_api_key"
-    vault_id = oci_kms_vault.secret_vault.id
+  compartment_id = oci_identity_compartment.cluster.id
+  key_id         = oci_kms_key.master_encryption_key.id
+  secret_name    = "cloudflare_api_key"
+  vault_id       = oci_kms_vault.secret_vault.id
 
-    secret_content {
-      content_type = "BASE64"
-      content = "UkVQTEFDRV9NRQ=="
-    }
+  secret_content {
+    content_type = "BASE64"
+    content      = "UkVQTEFDRV9NRQ=="
+  }
 }
