@@ -1,7 +1,7 @@
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: github-repo-apps
+  name: github-repo
   namespace: argocd
 spec:
   refreshInterval: "0"
@@ -9,14 +9,14 @@ spec:
     name: oci-secret-store
     kind: ClusterSecretStore
   target:
-    name: github-repo-apps
+    name: github-repo
     template:
       type: git
       metadata:
         labels:
-          argocd.argoproj.io/secret-type: repository
+          argocd.argoproj.io/secret-type: repo-creds
       data:
-        url: https://github.com/abayleypublic/apps
+        url: https://github.com/abayleypublic
         githubAppID: "1276323"
         githubAppInstallationID: "66865382"
         githubAppPrivateKey: "{{ .privateKey }}"
