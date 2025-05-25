@@ -30,6 +30,7 @@ OCI Secret Vault
 Argo
 
 - Auth with Github to save me somehow losing the password
+- Secrets must be uploaded as base64 but as plain text. Effectively double base64 encodes them but it won't work otherwise
 
 Networking
 
