@@ -1,7 +1,12 @@
 #!/bin/bash
 
+# Connections are disabled at the network level. This causes duplication & was a blocker to
+# getting the k3s cluster to start properly.
 systemctl disable firewalld --now
 
+DNS_NAME="kube.austinbayley.co.uk"
+
+# Install k3s
 curl -sfL https://get.k3s.io | K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) sh -s - server \
   --bind-address 0.0.0.0 \
   --cluster-cidr 10.0.0.0/18 \
@@ -9,7 +14,20 @@ curl -sfL https://get.k3s.io | K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) 
   --cluster-dns 10.0.64.10 \
   --tls-san $(hostname -I | awk '{print $1}') \
   --tls-san ${lb_ip} \
-  --tls-san kube.austinbayley.co.uk \
+  --tls-san ${DNS_NAME} \
   --flannel-backend=none \
   --disable-network-policy \
   --disable traefik 
+
+# Install OCI CLI. This is used to update secrets from the k3s install. DNF did not work when tryiing
+# to install so going with the generic Linux install script.
+curl -sL https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults
+
+KUBECONFIG_PATH="/etc/rancher/k3s/k3s.yaml"
+sed -i "s/0.0.0.0/${DNS_NAME}/g" "$KUBECONFIG_PATH"
+ENCODED_CONTENT=$(base64 -w 0 "$KUBECONFIG_PATH")
+
+oci vault secret update-base64 \
+  --secret-id "$secret_id" \
+  --secret-content-content "$ENCODED_CONTENT"
+
