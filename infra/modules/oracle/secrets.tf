@@ -92,7 +92,7 @@ resource "oci_vault_secret" "cloudflare_api_key" {
 }
 
 resource "oci_vault_secret" "kubeconfig" {
-  compartment_id = var.compartment_id
+  compartment_id = oci_identity_compartment.cluster.id
   secret_name    = "kubeconfig"
   vault_id       = oci_kms_vault.secret_vault.id
   key_id         = oci_kms_key.master_encryption_key.id
@@ -105,7 +105,7 @@ resource "oci_vault_secret" "kubeconfig" {
 }
 
 resource "oci_vault_secret" "jwks" {
-  compartment_id = var.compartment_id
+  compartment_id = oci_identity_compartment.cluster.id
   secret_name    = "jwks"
   vault_id       = oci_kms_vault.secret_vault.id
   key_id         = oci_kms_key.master_encryption_key.id

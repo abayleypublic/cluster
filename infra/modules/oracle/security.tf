@@ -27,6 +27,6 @@ resource "oci_identity_policy" "k3s_vault_access" {
   name           = "k3s_vault_access"
   description    = "Allow dynamic group to access secret bundles"
   statements = [
-    "allow dynamic-group ${oci_identity_dynamic_group.k3s_nodes.name} to read secret-bundles in compartment ${oci_identity_compartment.cluster.name}"
+    "allow dynamic-group ${oci_identity_dynamic_group.k3s_nodes.name} to manage secret-family in compartment ${oci_identity_compartment.cluster.name}"
   ]
 }
