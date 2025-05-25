@@ -36,6 +36,34 @@ tasks:
       - oci bastion session create-managed-ssh --bastion-id {{ .BASTION_ID }} --target-resource-id {{ .RESOURCE_ID }} --target-private-ip {{ .PRIVATE_IP }} --ssh-public-key-file ~/.ssh/id_rsa.pub --display-name "k3s-debug" --target-os-username opc --session-ttl 10800
 
   # ==========
+  # Kubectl
+  # ==========
+
+  merge-kube-config:
+    desc: Get kubectl config and merge with existing file
+    cmds:
+      - |
+        SECRET_B64=$(oci secrets secret-bundle get-secret-bundle-by-name \
+        --secret-name kubeconfig \
+        --vault-id ocid1.vault.oc1.uk-london-1.eruckcfxaaarq.abwgiljsf5ckladyqmxmnjo2zgc6sdymeqsic3ydbgrhuj7l2ulhl7k7mgda \
+        --query 'data."secret-bundle-content".content' \
+        --raw-output)
+
+        if [[ -z "$SECRET_B64" ]]; then
+          echo "❌ Failed to retrieve kubeconfig secret."
+          exit 1
+        fi
+
+        echo "$SECRET_B64" | base64 --decode > /tmp/kubeconfig.remote
+
+        echo "Merging kubeconfig with existing ~/.kube/config..."
+        export KUBECONFIG=/tmp/kubeconfig.remote:~/.kube/config
+        kubectl config view --flatten > /tmp/kubeconfig.merged
+        mv /tmp/kubeconfig.merged ~/.kube/config
+        chmod 600 ~/.kube/config
+        echo "✅ Kubeconfig merged successfully."
+
+  # ==========
   # Helm
   # ==========
 
@@ -43,8 +71,8 @@ tasks:
     desc: Install or upgrade all Helm charts
     cmds:
       - task: upgrade-cilium
-      - task: upgrade-cert-manager
       - task: upgrade-external-secrets
+      - task: upgrade-cert-manager
       - task: upgrade-argocd
 
   upgrade-cilium:
