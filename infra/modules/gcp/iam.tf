@@ -8,7 +8,9 @@ resource "google_service_account" "kubernetes" {
   display_name = "Kubernetes Service Account"
 }
 
+# ==========
 # Workload Identity Federation
+# ==========
 
 resource "google_project_service" "crm" {
   project            = var.project_id
@@ -21,3 +23,4 @@ resource "google_project_service" "sts" {
   service            = "sts.googleapis.com"
   disable_on_destroy = false
 }
+
