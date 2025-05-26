@@ -23,17 +23,77 @@ tasks:
 
   get-ampere-images:
     desc: Get availble images for Ampere machines
-    requires:
-      vars: [OCID]
+    dir: infra
     cmds:
-      - oci compute image list --compartment-id {{.OCID}} --operating-system "Oracle Linux" --shape "VM.Standard.A1.Flex" --output table
+      - |
+        COMPARTMENT_ID=$(terraform output -raw compartment_id)
+        oci compute image list \
+         --compartment-id $COMPARTMENT_ID \
+         --operating-system "Oracle Linux" \
+         --shape "VM.Standard.A1.Flex" \
+         --output table
 
   create-session:
     desc: Create a session with the bastion host for debugging
-    requires:
-      vars: [BASTION_ID, RESOURCE_ID, PRIVATE_IP]
+    dir: infra
     cmds:
-      - oci bastion session create-managed-ssh --bastion-id {{ .BASTION_ID }} --target-resource-id {{ .RESOURCE_ID }} --target-private-ip {{ .PRIVATE_IP }} --ssh-public-key-file ~/.ssh/id_rsa.pub --display-name "k3s-debug" --target-os-username opc --session-ttl 10800
+      - |
+        BASTION_ID=$(terraform output -raw bastion_id)
+        RESOURCE_ID=$(terraform output -raw server_id)
+        PRIVATE_IP=$(terraform output -raw server_ip)
+
+        oci bastion session create-managed-ssh \
+         --bastion-id $BASTION_ID \
+         --target-resource-id $RESOURCE_ID \
+         --target-private-ip $PRIVATE_IP \
+         --ssh-public-key-file ~/.ssh/id_rsa.pub \
+         --display-name "k3s-debug" \
+         --target-os-username opc \
+         --session-ttl 10800 \
+         --query 'data.id' --raw-output
+
+  connect-to-session:
+    desc: Connect to a Bastion host session (polls until ready)
+    cmds:
+      - |
+        SESSION_ID={{ .SESSION_ID }}
+        echo "🔁 Waiting for session $SESSION_ID to become ACTIVE..."
+
+        for i in {1..30}; do
+          STATE=$(oci bastion session get --session-id "$SESSION_ID" --query 'data."lifecycle-state"' --raw-output)
+          echo "⏳ Session state: $STATE"
+          if [[ "$STATE" == "ACTIVE" ]]; then
+            echo "✅ Session is ACTIVE!"
+            break
+          fi
+          sleep 5
+        done
+
+        if [[ "$STATE" != "ACTIVE" ]]; then
+          echo "❌ Timed out waiting for session to become ACTIVE."
+          exit 1
+        fi
+
+        echo "🔐 Fetching SSH command..."
+        SSH_CMD=$(oci bastion session get \
+          --session-id "$SESSION_ID" \
+          --query 'data."ssh-metadata".command' \
+          --raw-output)
+
+        # Replace <privateKey> placeholder with actual path
+        SSH_CMD="${SSH_CMD//<privateKey>/~/.ssh/id_rsa}"
+
+        echo "🚀 Connecting with command:"
+        echo "$SSH_CMD"
+
+        eval "$SSH_CMD"
+
+  session:
+    desc: Create a session and connect to it
+    cmds:
+      - |
+        SESSION_ID=$(task create-session)
+        task connect-to-session SESSION_ID=$SESSION_ID
 
   # ==========
   # Kubectl
