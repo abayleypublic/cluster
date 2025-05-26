@@ -200,6 +200,16 @@ resource "oci_core_security_list" "private_sg" {
     }
   }
 
+  # External Secrets Webhook
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "10.0.0.0/17"
+    tcp_options {
+      min = 8081
+      max = 8081
+    }
+  }
+
   # VXLAN
   ingress_security_rules {
     protocol = "17" # UDP
