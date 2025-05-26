@@ -19,5 +19,5 @@ configs:
 
   rbac:
     policy.default: role:admin
-    policy.csv: |
-      g, abayleyportfolio, role:admin
+    # policy.csv: |
+    #   g, abayleyportfolio, role:admin
