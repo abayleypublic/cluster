@@ -1,7 +1,10 @@
 #!/bin/bash
 
+# Connections are disabled at the network level. This causes duplication & was a blocker to
+# getting the k3s cluster to start properly.
 systemctl disable firewalld --now
 
+# Install k3s
 curl -sfL https://get.k3s.io | K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) sh -s - server \
   --bind-address 0.0.0.0 \
   --cluster-cidr 10.0.0.0/18 \
@@ -9,7 +12,49 @@ curl -sfL https://get.k3s.io | K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) 
   --cluster-dns 10.0.64.10 \
   --tls-san $(hostname -I | awk '{print $1}') \
   --tls-san ${lb_ip} \
-  --tls-san kube.austinbayley.co.uk \
+  --tls-san "kube.austinbayley.co.uk" \
   --flannel-backend=none \
   --disable-network-policy \
   --disable traefik 
+
+# Install OCI CLI. This is used to update secrets from the k3s install. DNF did not work when trying
+# to install so going with the generic Linux install script.
+curl -sL https://raw.githubusercontent.com/oracle/oci-cli/master/scripts/install/install.sh | bash -s -- --accept-all-defaults
+
+# Kubeconfig
+
+KUBECONFIG_PATH="/etc/rancher/k3s/k3s.yaml"
+sed -i "s/0.0.0.0/kube.austinbayley.co.uk/g" "$KUBECONFIG_PATH"
+
+ENCODED_KUBECONFIG=$(sudo base64 -w 0 "$KUBECONFIG_PATH")
+/root/bin/oci vault secret update-base64 \
+  --auth instance_principal \
+  --secret-id "${kubeconfig_secret_id}" \
+  --secret-content-content "$ENCODED_KUBECONFIG"
+
+# JWKS
+
+MAX_ATTEMPTS=30
+SLEEP_INTERVAL=10
+SUCCESS=0
+
+for ((i=1; i<=MAX_ATTEMPTS; i++)); do
+  JWKS_OUTPUT=$(sudo /usr/local/bin/kubectl get --raw /openid/v1/jwks 2>/dev/null)
+  if echo "$JWKS_OUTPUT" | grep -q '"keys"'; then
+    echo "JWKS endpoint is ready"
+    SUCCESS=1
+    break
+  fi
+  echo "Waiting for JWKS endpoint... attempt $i"
+  sleep $SLEEP_INTERVAL
+done
+
+if [[ $SUCCESS -eq 1 ]]; then
+  ENCODED_JWKS=$(echo "$JWKS_OUTPUT" | base64 -w 0)
+  /root/bin/oci vault secret update-base64 \
+    --auth instance_principal \
+    --secret-id "${jwks_secret_id}" \
+    --secret-content-content "$ENCODED_JWKS"
+else
+  echo "Failed to retrieve JWKS after $((MAX_ATTEMPTS * SLEEP_INTERVAL)) seconds" >&2
+fi
