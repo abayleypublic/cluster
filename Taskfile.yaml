@@ -41,13 +41,21 @@ tasks:
 
   merge-kube-config:
     desc: Get kubectl config and merge with existing file
+    dir: infra
     cmds:
       - |
+        VAULT_ID=$(terraform output -raw vault_id)
+
+        if [[ -z "$VAULT_ID" ]]; then
+          echo "❌ Failed to get Vault ID from Terraform."
+          exit 1
+        fi
+
         SECRET_B64=$(oci secrets secret-bundle get-secret-bundle-by-name \
-        --secret-name kubeconfig \
-        --vault-id ocid1.vault.oc1.uk-london-1.eruckcfxaaarq.abwgiljsf5ckladyqmxmnjo2zgc6sdymeqsic3ydbgrhuj7l2ulhl7k7mgda \
-        --query 'data."secret-bundle-content".content' \
-        --raw-output)
+          --secret-name kubeconfig \
+          --vault-id "$VAULT_ID" \
+          --query 'data."secret-bundle-content".content' \
+          --raw-output)
 
         if [[ -z "$SECRET_B64" ]]; then
           echo "❌ Failed to retrieve kubeconfig secret."
