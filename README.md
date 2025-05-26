@@ -38,6 +38,15 @@ Networking
 - Cluster on private subnet
 - Loadbalancer on public subnet
 
+Artifact Registry
+
+- Github Container Registry only has auth for individual, not Github Apps.
+- Oracle Cloud only has auth for individuals too via access tokens. Can create other accounts to mimic service accounts but the plan is to then use their access tokens too which feels like a workaround.
+- Docker Hub only allows for 1 free private repo in its free tier. Subscription tiers feel like they will cost more than other solutions.
+- Familiarity with GCP & haven't had quibbles with it in the past. Aim will be to reduce the size of the container images.
+
+If working with GCP for this, I might as well work with secrets & such for this too
+
 ## Install
 
 - Add necessary `.tfvars` (private key was generated here: https://cloud.oracle.com/identity/domains/my-profile/api-keys)
