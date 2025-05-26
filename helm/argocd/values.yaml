@@ -18,4 +18,6 @@ configs:
               - name: abayleyportfolio
 
   rbac:
-    policy.default: role:admin
+    policy.default: role:readonly
+    policy.csv: |
+      g, abayleyportfolio, role:admin
