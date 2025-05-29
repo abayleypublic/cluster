@@ -15,7 +15,12 @@ curl -sfL https://get.k3s.io | K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) 
   --tls-san kube.austinbayley.co.uk \
   --flannel-backend=none \
   --disable-network-policy \
-  --disable traefik 
+  --disable traefik \
+  --kube-apiserver-arg=service-account-issuer=https://kube.austinbayley.co.uk \
+  --kube-apiserver-arg=service-account-jwks-uri=https://kube.austinbayley.co.uk/openid/v1/jwks \
+  --kube-apiserver-arg=service-account-signing-key-file=/var/lib/rancher/k3s/server/tls/service.key \
+  --kube-apiserver-arg=service-account-key-file=/var/lib/rancher/k3s/server/tls/service.key \
+  --kube-apiserver-arg=anonymous-auth=true
 
 # Install OCI CLI. This is used to update secrets from the k3s install. DNF did not work when trying
 # to install so going with the generic Linux install script.
@@ -36,30 +41,3 @@ ENCODED_KUBECONFIG=$(base64 -w 0 "$TEMP_KUBECONFIG")
   --secret-content-content "$ENCODED_KUBECONFIG"
 
 sudo rm -f "$TEMP_KUBECONFIG"
-
-# JWKS
-
-MAX_ATTEMPTS=30
-SLEEP_INTERVAL=10
-SUCCESS=0
-
-for ((i=1; i<=MAX_ATTEMPTS; i++)); do
-  JWKS_OUTPUT=$(sudo /usr/local/bin/kubectl get --raw /openid/v1/jwks 2>/dev/null)
-  if echo "$JWKS_OUTPUT" | grep -q '"keys"'; then
-    echo "JWKS endpoint is ready"
-    SUCCESS=1
-    break
-  fi
-  echo "Waiting for JWKS endpoint... attempt $i"
-  sleep $SLEEP_INTERVAL
-done
-
-if [[ $SUCCESS -eq 1 ]]; then
-  ENCODED_JWKS=$(echo "$JWKS_OUTPUT" | base64 -w 0)
-  /root/bin/oci vault secret update-base64 \
-    --auth instance_principal \
-    --secret-id "${jwks_secret_id}" \
-    --secret-content-content "$ENCODED_JWKS"
-else
-  echo "Failed to retrieve JWKS after $((MAX_ATTEMPTS * SLEEP_INTERVAL)) seconds" >&2
-fi
