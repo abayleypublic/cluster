@@ -145,12 +145,14 @@ tasks:
       - task: upgrade-argocd
 
   upgrade-identity:
-    desc: Install or upgrade manifests for
+    desc: Install or upgrade manifests for identity
     dir: helm/identity
     cmds:
       - kubectl apply -f ./manifests/binding.yaml
       - kubectl apply -f ./manifests/proxy.yaml
       - kubectl apply -f ./manifests/route.yaml
+      - kubectl apply -f ./manifests/secrets.yaml
+      - kubectl apply -f ./manifests/gar.yaml
 
   upgrade-cilium:
     desc: Install or upgrade Cilium Helm chart

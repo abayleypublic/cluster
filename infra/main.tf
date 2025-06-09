@@ -69,6 +69,7 @@ module "dns" {
 }
 
 module "gcp" {
-  source     = "./modules/gcp"
-  project_id = var.gcp_project_id
+  source         = "./modules/gcp"
+  project_id     = var.gcp_project_id
+  project_number = var.gcp_project_number
 }

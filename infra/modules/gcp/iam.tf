@@ -3,10 +3,27 @@ resource "google_service_account" "kubernetes" {
   display_name = "Kubernetes Service Account"
 }
 
-resource "google_service_account_iam_member" "workload_identity_binding" {
+resource "google_service_account_iam_member" "kubernetes_workload_identity_binding" {
   service_account_id = google_service_account.kubernetes.name
   role               = "roles/iam.workloadIdentityUser"
-  member             = "serviceAccount:${google_service_account.kubernetes.email}"
+  member             = "principal://iam.googleapis.com/projects/${var.project_number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.kubernetes.workload_identity_pool_id}/subject/system:serviceaccount:default:default"
+}
+
+resource "google_service_account" "image_pull" {
+  account_id   = "image-pull"
+  display_name = "Image Pull Service Account"
+}
+
+resource "google_service_account_iam_member" "image_pull_workload_identity_binding" {
+  service_account_id = google_service_account.image_pull.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "principal://iam.googleapis.com/projects/${var.project_number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.kubernetes.workload_identity_pool_id}/subject/system:serviceaccount:default:image-pull"
+}
+
+resource "google_project_iam_member" "image_pull_artifact_reader" {
+  project = var.project_id
+  role    = "roles/artifactregistry.reader"
+  member  = "serviceAccount:${google_service_account.image_pull.email}"
 }
 
 # ==========
