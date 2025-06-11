@@ -34,3 +34,13 @@ variable "cloudflare_api_key" {
   description = "Cloudflare API key with permissions to manage DNS records."
   type        = string
 }
+
+variable "gcp_project_id" {
+  description = "The ID of the GCP project in which the resources will be created."
+  type        = string
+}
+
+variable "gcp_project_number" {
+  description = "The project number of the GCP project."
+  type        = string
+}

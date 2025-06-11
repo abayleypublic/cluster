@@ -36,7 +36,6 @@ resource "oci_core_instance" "server" {
       lb_ip                = oci_load_balancer_load_balancer.k3s_lb.ip_address_details[0].ip_address
       k3s_token            = random_password.k3s_token.result
       kubeconfig_secret_id = oci_vault_secret.kubeconfig.id
-      jwks_secret_id       = oci_vault_secret.jwks.id
     }))
   }
 

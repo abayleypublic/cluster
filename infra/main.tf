@@ -36,7 +36,7 @@ terraform {
 
     cloudflare = {
       source  = "cloudflare/cloudflare"
-      version = "5.5.0"
+      version = "~> 5.5.0"
     }
   }
 }
@@ -53,6 +53,11 @@ provider "cloudflare" {
   api_token = var.cloudflare_api_key
 }
 
+provider "google" {
+  project = var.gcp_project_id
+  region  = "europe-west1"
+}
+
 module "cluster" {
   source         = "./modules/oracle"
   compartment_id = var.tenancy_ocid
@@ -61,4 +66,10 @@ module "cluster" {
 module "dns" {
   source    = "./modules/cloudflare"
   public_ip = module.cluster.public_ip
+}
+
+module "gcp" {
+  source         = "./modules/gcp"
+  project_id     = var.gcp_project_id
+  project_number = var.gcp_project_number
 }

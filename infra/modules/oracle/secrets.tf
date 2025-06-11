@@ -103,16 +103,3 @@ resource "oci_vault_secret" "kubeconfig" {
     content      = "UkVQTEFDRV9NRQ=="
   }
 }
-
-resource "oci_vault_secret" "jwks" {
-  compartment_id = oci_identity_compartment.cluster.id
-  secret_name    = "jwks"
-  vault_id       = oci_kms_vault.secret_vault.id
-  key_id         = oci_kms_key.master_encryption_key.id
-  description    = "JWKS for the cluster"
-
-  secret_content {
-    content_type = "BASE64"
-    content      = "UkVQTEFDRV9NRQ=="
-  }
-}
