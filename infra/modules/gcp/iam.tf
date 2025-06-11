@@ -1,14 +1,3 @@
-resource "google_service_account" "kubernetes" {
-  account_id   = "kubernetes"
-  display_name = "Kubernetes Service Account"
-}
-
-resource "google_service_account_iam_member" "kubernetes_workload_identity_binding" {
-  service_account_id = google_service_account.kubernetes.name
-  role               = "roles/iam.workloadIdentityUser"
-  member             = "principal://iam.googleapis.com/projects/${var.project_number}/locations/global/workloadIdentityPools/${google_iam_workload_identity_pool.kubernetes.workload_identity_pool_id}/subject/system:serviceaccount:default:default"
-}
-
 resource "google_service_account" "github_actions" {
   account_id   = "github-actions"
   display_name = "Github Actions Service Account"
