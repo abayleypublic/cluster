@@ -44,3 +44,18 @@ variable "gcp_project_number" {
   description = "The project number of the GCP project."
   type        = string
 }
+
+variable "mongodb_atlas_public_key" {
+  description = "Public key for MongoDB Atlas API."
+  type        = string
+}
+
+variable "mongodb_atlas_private_key" {
+  description = "Private key for MongoDB Atlas API."
+  type        = string
+}
+
+variable "mongodb_atlas_org_id" {
+  description = "MongoDB Atlas organization ID."
+  type        = string
+}
