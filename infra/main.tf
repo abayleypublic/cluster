@@ -38,6 +38,11 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 5.5.0"
     }
+
+    mongodbatlas = {
+      source  = "mongodb/mongodbatlas"
+      version = "1.36.0"
+    }
   }
 }
 
@@ -58,6 +63,11 @@ provider "google" {
   region  = "europe-west1"
 }
 
+provider "mongodbatlas" {
+  public_key  = var.mongodb_atlas_public_key
+  private_key = var.mongodb_atlas_private_key
+}
+
 module "cluster" {
   source         = "./modules/oracle"
   compartment_id = var.tenancy_ocid
@@ -72,4 +82,10 @@ module "gcp" {
   source         = "./modules/gcp"
   project_id     = var.gcp_project_id
   project_number = var.gcp_project_number
+}
+
+module "mongodb" {
+  source            = "./modules/mongodb"
+  org_id            = var.mongodb_atlas_org_id
+  cluster_egress_ip = module.cluster.egress_ip
 }

@@ -9,10 +9,17 @@ resource "oci_core_vcn" "cluster_vcn" {
   dns_label      = "clustervcn"
 }
 
+resource "oci_core_public_ip" "nat_static" {
+  compartment_id = oci_identity_compartment.cluster.id
+  lifetime       = "RESERVED"
+  display_name   = "cluster-egress-ip"
+}
+
 resource "oci_core_nat_gateway" "nat_gw" {
   compartment_id = oci_identity_compartment.cluster.id
   vcn_id         = oci_core_vcn.cluster_vcn.id
   display_name   = "nat_gateway"
+  public_ip_id   = oci_core_public_ip.nat_static.id
 }
 
 resource "oci_core_internet_gateway" "internet_gateway" {

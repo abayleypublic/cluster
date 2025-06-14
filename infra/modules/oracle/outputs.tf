@@ -22,3 +22,8 @@ output "server_details" {
   description = "Details for the server instances"
   value       = oci_core_instance.server
 }
+
+output "egress_ip" {
+  description = "Egress IP of the Oracle instance"
+  value       = oci_core_public_ip.nat_static.ip_address
+}
