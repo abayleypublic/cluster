@@ -1,9 +1,3 @@
-variable "project_id" {
-  description = "The project ID to use for the Google Cloud resources."
-  type        = string
-  default     = "portfolio-459420"
-}
-
 variable "tenancy_ocid" {
   description = "Oracle Cloud tenancy OCID."
   type        = string
@@ -38,11 +32,13 @@ variable "cloudflare_api_key" {
 variable "gcp_project_id" {
   description = "The ID of the GCP project in which the resources will be created."
   type        = string
+  default     = "portfolio-463406"
 }
 
 variable "gcp_project_number" {
   description = "The project number of the GCP project."
   type        = string
+  default     = "416469577734"
 }
 
 variable "mongodb_atlas_public_key" {
