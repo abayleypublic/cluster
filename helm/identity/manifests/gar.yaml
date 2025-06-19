@@ -57,7 +57,7 @@ spec:
                       "grantType":"urn:ietf:params:oauth:grant-type:token-exchange",
                       "requestedTokenType":"urn:ietf:params:oauth:token-type:access_token",
                       "subjectTokenType":"urn:ietf:params:oauth:token-type:jwt",
-                      "audience":"//iam.googleapis.com/projects/745294108339/locations/global/workloadIdentityPools/kubernetes/providers/cluster",
+                      "audience":"//iam.googleapis.com/projects/416469577734/locations/global/workloadIdentityPools/kubernetes/providers/cluster",
                       "scope":"https://www.googleapis.com/auth/cloud-platform",
                       "subjectToken":"'"${KSA_JWT}"'"
                     }' | jq -r .access_token)
@@ -95,6 +95,6 @@ spec:
               projected:
                 sources:
                   - serviceAccountToken:
-                      audience: "//iam.googleapis.com/projects/745294108339/locations/global/workloadIdentityPools/kubernetes/providers/cluster"
+                      audience: "//iam.googleapis.com/projects/416469577734/locations/global/workloadIdentityPools/kubernetes/providers/cluster"
                       path: ksa-jwt
                       expirationSeconds: 3600
