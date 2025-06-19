@@ -4,7 +4,7 @@ metadata:
   name: image-pull
   namespace: default
   annotations:
-    iam.gke.io/gcp-service-account: image-pull@portfolio-459420.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: image-pull@portfolio-463406.iam.gserviceaccount.com
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -64,7 +64,7 @@ spec:
 
                   GSA_TOKEN=$(curl -s -H "Authorization: Bearer ${FED_TOKEN}" \
                     -H "Content-Type: application/json" \
-                    "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/image-pull@portfolio-459420.iam.gserviceaccount.com:generateAccessToken" \
+                    "https://iamcredentials.googleapis.com/v1/projects/-/serviceAccounts/image-pull@portfolio-463406.iam.gserviceaccount.com:generateAccessToken" \
                     -d '{"scope":["https://www.googleapis.com/auth/cloud-platform"]}' | jq -r .accessToken)
 
                   if [[ -z "${GSA_TOKEN}" || "${GSA_TOKEN}" == "null" ]]; then
