@@ -36,18 +36,6 @@ resource "google_project_iam_member" "image_pull_artifact_reader" {
 # Workload Identity Federation
 # ==========
 
-resource "google_project_service" "crm" {
-  project            = var.project_id
-  service            = "cloudresourcemanager.googleapis.com"
-  disable_on_destroy = false
-}
-
-resource "google_project_service" "sts" {
-  project            = var.project_id
-  service            = "sts.googleapis.com"
-  disable_on_destroy = false
-}
-
 resource "google_iam_workload_identity_pool" "kubernetes" {
   workload_identity_pool_id = "kubernetes"
   display_name              = "Kubernetes"
