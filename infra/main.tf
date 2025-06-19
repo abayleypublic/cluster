@@ -6,7 +6,7 @@ resource "random_id" "default" {
 
 resource "google_storage_bucket" "state" {
   name     = "${random_id.default.hex}-infra-terraform-state"
-  project  = var.project_id
+  project  = var.gcp_project_id
   location = "US-EAST1"
 
   force_destroy               = false
