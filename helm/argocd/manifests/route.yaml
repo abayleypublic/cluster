@@ -5,8 +5,8 @@ metadata:
   namespace: argocd
 spec:
   parentRefs:
-    - name: cilium-gateway
-      namespace: kube-system
+    - name: default-gateway
+      namespace: envoy-gateway-system
   hostnames:
     - "argocd.austinbayley.co.uk"
   rules:

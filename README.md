@@ -20,7 +20,6 @@ k3s script rather than using provider
 
 Cilium:
 
-- Host network, single gateway exposed on port 1024 as it is not privileged
 - Tried Nodeport but was too random & couldn't be controlled
 - Didn't want to align too tightly with OCI loadbalancer
 

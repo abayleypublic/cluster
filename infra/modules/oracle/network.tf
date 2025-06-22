@@ -137,16 +137,6 @@ resource "oci_core_security_list" "private_sg" {
     }
   }
 
-  # Cilium Gateway 
-  ingress_security_rules {
-    protocol = "6" # TCP
-    source   = "10.0.128.0/24"
-    tcp_options {
-      min = 1024
-      max = 1024
-    }
-  }
-
   # Cilium Health
   ingress_security_rules {
     protocol = "6" # TCP
@@ -287,6 +277,16 @@ resource "oci_core_security_list" "private_sg" {
     }
   }
 
+  # Envoy Default Gateway (port 443)
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "10.0.128.0/24"
+    tcp_options {
+      min = 10443
+      max = 10443
+    }
+  }
+
   # NodePort
   ingress_security_rules {
     protocol = "6" # TCP
@@ -340,16 +340,16 @@ resource "oci_load_balancer_backend_set" "k3s_https_backend_set" {
 
   health_checker {
     protocol = "TCP"
-    port     = 1024
+    port     = 10443
   }
 }
 
 resource "oci_load_balancer_backend" "k3s_https_backends" {
-  for_each         = oci_core_instance.server
+  for_each         = merge(oci_core_instance.server, oci_core_instance.ampere_agent)
   load_balancer_id = oci_load_balancer_load_balancer.k3s_lb.id
   backendset_name  = oci_load_balancer_backend_set.k3s_https_backend_set.name
   ip_address       = each.value.private_ip
-  port             = 1024
+  port             = 10443
 }
 
 resource "oci_load_balancer_listener" "k3s_https_listener" {

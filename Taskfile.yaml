@@ -139,6 +139,7 @@ tasks:
     desc: Install or upgrade all Helm charts
     cmds:
       - task: upgrade-cilium
+      - task: upgrade-envoy
       - task: upgrade-identity
       - task: upgrade-external-secrets
       - task: upgrade-cert-manager
@@ -161,12 +162,28 @@ tasks:
       # We must use v1.1.0 as apparently Envoy doesn't like the newer versions
       - kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.1.0/experimental-install.yaml
       - helm upgrade --install -f values.yaml --namespace=kube-system cilium ./chart
-      - kubectl apply -f ./manifests/gateway.yaml
 
   uninstall-cilium:
-    desc: Install Cilium Helm chart
+    desc: Uninstall Cilium Helm chart
     cmds:
       - helm uninstall cilium
+
+  upgrade-envoy:
+    desc: Install or upgrade Envoy Gateway Helm chart
+    dir: helm/envoy
+    cmds:
+      - |
+        helm upgrade --install eg oci://docker.io/envoyproxy/gateway-helm \
+        --version v1.4.1 \
+        -n envoy-gateway-system \
+        --create-namespace \
+        -f values.yaml
+      - kubectl apply -f ./manifests/gateway.yaml
+
+  uninstall-envoy:
+    desc: Uninstall Envoy Gateway Helm chart
+    cmds:
+      - helm uninstall eg
 
   upgrade-external-secrets:
     desc: Install or upgrade External Secrets Helm chart
