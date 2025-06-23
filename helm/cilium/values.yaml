@@ -6,9 +6,7 @@ operator:
 kubeProxyReplacement: true
 
 gatewayAPI:
-  enabled: true
-  hostNetwork:
-    enabled: true
+  enabled: false
 
 envoy:
   enabled: true
