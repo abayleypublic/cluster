@@ -132,7 +132,7 @@ tasks:
         echo "✅ Kubeconfig merged successfully."
 
   # ==========
-  # Helm
+  # Helm & Kustomize
   # ==========
 
   upgrade-all:
@@ -194,7 +194,7 @@ tasks:
       - kubectl apply -f ./manifests/store.yaml
 
   uninstall-external-secrets:
-    desc: Install External Secrets Helm chart
+    desc: Uninstall External Secrets Helm chart
     cmds:
       - helm uninstall external-secrets
 
@@ -208,7 +208,7 @@ tasks:
       - kubectl apply -f ./manifests/issuer.yaml
 
   uninstall-cert-manager:
-    desc: Install Cert Manager Helm chart
+    desc: Uninstall Cert Manager Helm chart
     cmds:
       - helm uninstall cert-manager
 
@@ -225,9 +225,15 @@ tasks:
       - kubectl apply -f ./manifests/apps.yaml
 
   uninstall-argocd:
-    desc: Install ArgoCD Helm chart
+    desc: Uninstall ArgoCD Helm chart
     cmds:
       - helm uninstall argocd
+
+  upgrade-kustomize:
+    desc: Install or upgrade Kubernetes manifests via Kustomize
+    dir: kustomize
+    cmds:
+      - kubectl apply -k .
 
   # ==========
   # Runtime

@@ -43,6 +43,11 @@ terraform {
       source  = "mongodb/mongodbatlas"
       version = "1.36.0"
     }
+
+    auth0 = {
+      source  = "auth0/auth0"
+      version = "~> 1.1.2"
+    }
   }
 }
 
@@ -68,6 +73,12 @@ provider "mongodbatlas" {
   private_key = var.mongodb_atlas_private_key
 }
 
+provider "auth0" {
+  domain        = var.auth0_domain
+  client_id     = var.auth0_client_id
+  client_secret = var.auth0_client_secret
+}
+
 module "cluster" {
   source         = "./modules/oracle"
   compartment_id = var.tenancy_ocid
@@ -88,4 +99,8 @@ module "mongodb" {
   source            = "./modules/mongodb"
   org_id            = var.mongodb_atlas_org_id
   cluster_egress_ip = module.cluster.egress_ip
+}
+
+module "auth0" {
+  source = "./modules/auth0"
 }
