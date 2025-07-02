@@ -4,7 +4,7 @@ data "mongodbatlas_federated_settings" "settings" {
 
 resource "mongodbatlas_federated_settings_identity_provider" "k8s_oidc" {
   federation_settings_id = data.mongodbatlas_federated_settings.settings.id
-  audience               = "mongodb"
+  audience               = "https://kubernetes.default.svc.cluster.local"
   authorization_type     = "USER"
   description            = "Kubernetes OIDC provider"
   issuer_uri             = "https://kube.austinbayley.co.uk"
