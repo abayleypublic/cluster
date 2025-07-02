@@ -1,4 +1,4 @@
-resource "auth0_client" "oidc_client" {
+resource "auth0_client" "production_client" {
   name                = "Production"
   description         = "Portfolio production OIDC client"
   app_type            = "regular_web"
@@ -10,4 +10,10 @@ resource "auth0_client" "oidc_client" {
   jwt_configuration {
     alg = "RS256"
   }
+}
+
+resource "auth0_client_grant" "production_api_grant" {
+  client_id = auth0_client.production_client.id
+  audience  = auth0_resource_server.production_api.identifier
+  scopes    = ["read:users"]
 }
