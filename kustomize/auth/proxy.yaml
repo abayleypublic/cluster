@@ -33,6 +33,9 @@ spec:
             - --reverse-proxy=true
             - --real-client-ip-header=X-Forwarded-For
             - --upstream="static://200"
+            - --resource=https://austinbayley.co.uk
+            - --scope=openid profile email
+            - --oidc-groups-claim=https://austinbayley.co.uk/groups
           envFrom:
             - secretRef:
                 name: proxy-secrets
