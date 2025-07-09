@@ -52,6 +52,12 @@ Artifact Registry
 
 If working with GCP for this, I might as well work with secrets & such for this too
 
+MongoDB
+
+- Attempted to use OIDC auth but only available on M10 clusters rather than free tier
+- OIDC would be available on self hosted but wouldn't be able to control with Terraform & a lot more hassle
+- x509 auth available but again, hassle compared to username & password, hence uname and password
+
 ## Install
 
 - Add necessary `.tfvars` (private key was generated here: https://cloud.oracle.com/identity/domains/my-profile/api-keys)
