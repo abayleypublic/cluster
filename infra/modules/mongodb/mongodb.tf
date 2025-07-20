@@ -4,9 +4,10 @@ resource "mongodbatlas_project" "portfolio" {
 }
 
 resource "mongodbatlas_advanced_cluster" "cluster" {
-  project_id   = mongodbatlas_project.portfolio.id
-  name         = "Portfolio"
-  cluster_type = "REPLICASET"
+  project_id             = mongodbatlas_project.portfolio.id
+  name                   = "Portfolio"
+  cluster_type           = "REPLICASET"
+  mongo_db_major_version = "8.0"
   replication_specs {
     region_configs {
       electable_specs {
