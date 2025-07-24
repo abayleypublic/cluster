@@ -35,7 +35,7 @@ spec:
   source:
     repoURL: https://github.com/abayleypublic/apps
     targetRevision: HEAD
-    path: .
+    path: manifests
   destination:
     server: https://kube.austinbayley.co.uk:6443
     namespace: argocd
