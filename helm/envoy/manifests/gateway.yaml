@@ -51,7 +51,7 @@ metadata:
 spec:
   gatewayClassName: eg
   listeners:
-    - name: https
+    - name: prod-https
       hostname: "*.austinbayley.co.uk"
       port: 443
       protocol: HTTPS
@@ -61,6 +61,19 @@ spec:
       tls:
         mode: Terminate
         certificateRefs:
-          - name: austinbayley-tls
+          - name: prod-austinbayley-tls
+            kind: Secret
+            group: ""
+    - name: stg-https
+      hostname: "*.stg.austinbayley.co.uk"
+      port: 443
+      protocol: HTTPS
+      allowedRoutes:
+        namespaces:
+          from: All
+      tls:
+        mode: Terminate
+        certificateRefs:
+          - name: stg-austinbayley-tls
             kind: Secret
             group: ""

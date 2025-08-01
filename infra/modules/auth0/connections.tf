@@ -7,6 +7,13 @@ resource "auth0_connection" "google_oauth2" {
   }
 }
 
+resource "auth0_connection" "staging_db" {
+  name                 = "staging"
+  is_domain_connection = false
+  strategy             = "auth0"
+  realms               = ["staging"]
+}
+
 resource "auth0_connection" "production_db" {
   name                 = "production"
   is_domain_connection = false
