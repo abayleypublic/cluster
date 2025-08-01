@@ -1,0 +1,19 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: oauth-public
+spec:
+  parentRefs:
+    - name: default-gateway
+      namespace: envoy-gateway-system
+  hostnames:
+    - "auth.austinbayley.co.uk"
+  rules:
+    - matches:
+        - path:
+            type: PathPrefix
+            value: /oauth2/
+      backendRefs:
+        - name: oauth2-proxy
+          namespace: prod-auth
+          port: 4180

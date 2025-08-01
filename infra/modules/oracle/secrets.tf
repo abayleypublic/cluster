@@ -104,12 +104,12 @@ resource "oci_vault_secret" "kubeconfig" {
   }
 }
 
-resource "oci_vault_secret" "auth_client_secret" {
+resource "oci_vault_secret" "prod_auth_client_secret" {
   compartment_id = oci_identity_compartment.cluster.id
-  secret_name    = "auth_client_secret"
+  secret_name    = "prod_auth_client_secret"
   vault_id       = oci_kms_vault.secret_vault.id
   key_id         = oci_kms_key.master_encryption_key.id
-  description    = "OAuth client secret for authentication"
+  description    = "OAuth client secret for production authentication"
 
   secret_content {
     content_type = "BASE64"
@@ -117,22 +117,56 @@ resource "oci_vault_secret" "auth_client_secret" {
   }
 }
 
-resource "random_password" "cookie_secret" {
+resource "random_password" "prod_cookie_secret" {
   length  = 32
   special = false
   upper   = true
   lower   = true
 }
 
-resource "oci_vault_secret" "auth_cookie_secret" {
+resource "oci_vault_secret" "prod_auth_cookie_secret" {
   compartment_id = oci_identity_compartment.cluster.id
-  secret_name    = "auth_cookie_secret"
+  secret_name    = "prod_auth_cookie_secret"
   vault_id       = oci_kms_vault.secret_vault.id
   key_id         = oci_kms_key.master_encryption_key.id
-  description    = "OAuth cookie secret for authentication"
+  description    = "OAuth cookie secret for production authentication"
 
   secret_content {
     content_type = "BASE64"
-    content      = base64encode(random_password.cookie_secret.result)
+    content      = base64encode(random_password.prod_cookie_secret.result)
+  }
+}
+
+
+resource "oci_vault_secret" "stg_auth_client_secret" {
+  compartment_id = oci_identity_compartment.cluster.id
+  secret_name    = "stg_auth_client_secret"
+  vault_id       = oci_kms_vault.secret_vault.id
+  key_id         = oci_kms_key.master_encryption_key.id
+  description    = "OAuth client secret for staging authentication"
+
+  secret_content {
+    content_type = "BASE64"
+    content      = "UkVQTEFDRV9NRQ=="
+  }
+}
+
+resource "random_password" "stg_cookie_secret" {
+  length  = 32
+  special = false
+  upper   = true
+  lower   = true
+}
+
+resource "oci_vault_secret" "stg_auth_cookie_secret" {
+  compartment_id = oci_identity_compartment.cluster.id
+  secret_name    = "stg_auth_cookie_secret"
+  vault_id       = oci_kms_vault.secret_vault.id
+  key_id         = oci_kms_key.master_encryption_key.id
+  description    = "OAuth cookie secret for staging authentication"
+
+  secret_content {
+    content_type = "BASE64"
+    content      = base64encode(random_password.stg_cookie_secret.result)
   }
 }

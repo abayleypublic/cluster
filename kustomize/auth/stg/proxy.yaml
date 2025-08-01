@@ -21,21 +21,21 @@ spec:
             - --provider-display-name=Auth0
             - --skip-provider-button=true
             - --oidc-issuer-url=https://dev-hoo0x1gbvzrm2jd2.uk.auth0.com/
-            - --client-id=mdG9zZuix9tsZnGWnqdQ2PlzvLBUZsPW
+            - --client-id=E1Id4VSoAEDoZnMB1ykNyyvwlSaGUeZe
             - --client-secret=$(CLIENT_SECRET)
             - --skip-jwt-bearer-tokens=true
             - --set-xauthrequest=true
-            - --cookie-name=ausibay
+            - --cookie-name=ausibay-stg
             - --cookie-secret=$(COOKIE_SECRET)
             - --cookie-secure=true
-            - --cookie-domain=austinbayley.co.uk
+            - --cookie-domain=stg.austinbayley.co.uk
             - --email-domain=*
             - --reverse-proxy=true
             - --real-client-ip-header=X-Forwarded-For
             - --upstream="static://200"
-            - --resource=https://austinbayley.co.uk
+            - --resource=https://stg.austinbayley.co.uk
             - --scope=openid profile email
-            - --oidc-groups-claim=https://austinbayley.co.uk/groups
+            - --oidc-groups-claim=https://stg.austinbayley.co.uk/groups
           envFrom:
             - secretRef:
                 name: proxy-secrets
@@ -57,15 +57,15 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
-  name: allow-roam-ext-auth
+  name: allow-activity-ext-auth
 spec:
   from:
     - group: gateway.envoyproxy.io
       kind: SecurityPolicy
-      namespace: roam
+      namespace: stg-activity
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
-      namespace: roam
+      namespace: stg-activity
   to:
     - group: ""
       kind: Service
