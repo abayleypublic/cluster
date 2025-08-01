@@ -46,7 +46,7 @@ terraform {
 
     auth0 = {
       source  = "auth0/auth0"
-      version = "~> 1.1.2"
+      version = "~> 1.25.0"
     }
   }
 }
