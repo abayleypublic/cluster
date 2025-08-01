@@ -9,15 +9,6 @@ resource "auth0_connection" "staging_db" {
   realms               = ["staging"]
 }
 
-resource "auth0_connection" "staging_google_oauth2" {
-  name     = "stg-google-oauth2"
-  strategy = "google-oauth2"
-
-  options {
-    scopes = ["email", "profile"]
-  }
-}
-
 
 # ==========
 # Production
