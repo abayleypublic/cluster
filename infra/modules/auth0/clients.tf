@@ -29,13 +29,6 @@ resource "auth0_connection_clients" "staging_db_clients" {
   ]
 }
 
-resource "auth0_connection_clients" "staging_google_clients" {
-  connection_id = auth0_connection.staging_google_oauth2.id
-  enabled_clients = [
-    auth0_client.staging_client.id,
-  ]
-}
-
 # ==========
 # Production
 # =========
