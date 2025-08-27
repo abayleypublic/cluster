@@ -33,6 +33,15 @@ tasks:
          --shape "VM.Standard.A1.Flex" \
          --output table
 
+  generate-ephemeral-key:
+    desc: Generate an ephemeral SSH keypair
+    cmds:
+      - |
+        echo "🔑 Generating ephemeral SSH keypair..."
+        mkdir -p .ssh
+        ssh-keygen -t rsa -b 2048 -f .ssh/ephemeral -N "" -q
+        echo "✅ Ephemeral SSH keypair generated at .ssh/ephemeral(.pub)"
+
   create-session:
     desc: Create a session with the bastion host for debugging
     dir: infra
@@ -42,15 +51,17 @@ tasks:
         RESOURCE_ID=$(terraform output -raw server_id)
         PRIVATE_IP=$(terraform output -raw server_ip)
 
-        oci bastion session create-managed-ssh \
-         --bastion-id $BASTION_ID \
-         --target-resource-id $RESOURCE_ID \
-         --target-private-ip $PRIVATE_IP \
-         --ssh-public-key-file ~/.ssh/id_rsa.pub \
-         --display-name "k3s-debug" \
-         --target-os-username opc \
-         --session-ttl 10800 \
-         --query 'data.id' --raw-output
+        SESSION_ID=$(oci bastion session create-managed-ssh \
+        --bastion-id $BASTION_ID \
+        --target-resource-id $RESOURCE_ID \
+        --target-private-ip $PRIVATE_IP \
+        --ssh-public-key-file ../.ssh/ephemeral.pub \
+        --display-name "k3s-debug" \
+        --target-os-username opc \
+        --session-ttl 10800 \
+        --query 'data.id' --raw-output)
+
+        echo $SESSION_ID
 
   connect-to-session:
     desc: Connect to a Bastion host session (polls until ready)
@@ -80,8 +91,7 @@ tasks:
           --query 'data."ssh-metadata".command' \
           --raw-output)
 
-        # Replace <privateKey> placeholder with actual path
-        SSH_CMD="${SSH_CMD//<privateKey>/~/.ssh/id_rsa}"
+        SSH_CMD="${SSH_CMD//<privateKey>/.ssh/ephemeral}"
 
         echo "🚀 Connecting with command:"
         echo "$SSH_CMD"
@@ -92,6 +102,7 @@ tasks:
     desc: Create a session and connect to it
     cmds:
       - |
+        task generate-ephemeral-key
         SESSION_ID=$(task create-session)
         task connect-to-session SESSION_ID=$SESSION_ID
 
@@ -127,6 +138,7 @@ tasks:
         echo "Merging kubeconfig with existing ~/.kube/config..."
         export KUBECONFIG=/tmp/kubeconfig.remote:~/.kube/config
         kubectl config view --flatten > /tmp/kubeconfig.merged
+        mkdir -p ~/.kube
         mv /tmp/kubeconfig.merged ~/.kube/config
         chmod 600 ~/.kube/config
         echo "✅ Kubeconfig merged successfully."
@@ -140,10 +152,11 @@ tasks:
     cmds:
       - task: upgrade-cilium
       - task: upgrade-envoy
-      - task: upgrade-identity
       - task: upgrade-external-secrets
+      - task: upgrade-identity
       - task: upgrade-cert-manager
       - task: upgrade-argocd
+      - task: upgrade-kustomize
 
   upgrade-identity:
     desc: Install or upgrade manifests for identity
@@ -159,7 +172,7 @@ tasks:
     dir: helm/cilium
     cmds:
       # We must use v1.1.0 as apparently Envoy doesn't like the newer versions
-      - kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.1.0/experimental-install.yaml
+      - kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/experimental-install.yaml
       - helm upgrade --install -f values.yaml --namespace=kube-system cilium ./chart
 
   uninstall-cilium:

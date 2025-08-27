@@ -3,6 +3,10 @@ namespaceOverride: kube-system
 operator:
   replicas: 1
 
+# Without this, Cilium wasn't starting
+k8sServiceHost: "kube.austinbayley.co.uk"
+k8sServicePort: 6443
+
 kubeProxyReplacement: true
 
 gatewayAPI:
