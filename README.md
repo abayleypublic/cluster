@@ -7,9 +7,9 @@
 - Loadbalancer address Cloudflare
 - Email routing Cloudflare
 - Better handling of 500 error when email is not verified
-- Deploy Valkey instead of Redis
 - Migrate to Open Tofu rather than Terraform
 - Switchover "portfolio" references to "production"
+- Wait for webhook when installing external secrets & cert manager charts
 
 - Document process to manually create & import federated settings org config `terraform import module.mongodb.mongodbatlas_federated_settings_org_config.org_config [federated settings id]-[org id]` before being able to operate on it.
 
@@ -57,6 +57,13 @@ MongoDB
 - Attempted to use OIDC auth but only available on M10 clusters rather than free tier
 - OIDC would be available on self hosted but wouldn't be able to control with Terraform & a lot more hassle
 - x509 auth available but again, hassle compared to username & password, hence uname and password
+
+## Download
+
+```
+git submodule init
+git submodule update
+```
 
 ## Install
 
