@@ -6,7 +6,7 @@ resource "auth0_client" "staging_client" {
   name                = "Staging"
   description         = "Portfolio staging OIDC client"
   app_type            = "regular_web"
-  callbacks           = ["https://activity.stg.austinbayley.co.uk/oauth2/callback", "https://roam.stg.austinbayley.co.uk/oauth2/callback"]
+  callbacks           = ["https://activity.stg.austinbayley.co.uk/oauth2/callback", "https://roam.stg.austinbayley.co.uk/oauth2/callback", "https://temporal.austinbayley.co.uk/auth/sso/callback"]
   allowed_logout_urls = ["https://*.stg.austinbayley.co.uk"]
   web_origins         = ["https://*.stg.austinbayley.co.uk"]
   oidc_conformant     = true

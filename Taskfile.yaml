@@ -242,6 +242,21 @@ tasks:
     cmds:
       - helm uninstall argocd
 
+  upgrade-temporal:
+    desc: Install or upgrade Temporal Helm chart
+    dir: helm/temporal
+    cmds:
+      - kubectl create namespace temporal --dry-run=client -o yaml | kubectl apply -f -
+      - kubectl apply -f ./manifests/secrets.yaml
+      - kubectl apply -f ./manifests/route.yaml
+      - helm dependencies update ./chart
+      - helm upgrade --install -f values.yaml --create-namespace --namespace=temporal temporal ./chart
+
+  uninstall-temporal:
+    desc: Uninstall Temporal Helm chart
+    cmds:
+      - helm uninstall temporal
+
   upgrade-kustomize:
     desc: Install or upgrade Kubernetes manifests via Kustomize
     dir: kustomize

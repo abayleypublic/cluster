@@ -137,6 +137,16 @@ resource "oci_core_security_list" "private_sg" {
     }
   }
 
+  # MySQL
+  ingress_security_rules {
+    protocol = "6" # TCP
+    source   = "10.0.0.0/17"
+    tcp_options {
+      min = 3306
+      max = 3306
+    }
+  }
+
   # Cilium Health
   ingress_security_rules {
     protocol = "6" # TCP

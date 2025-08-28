@@ -1,0 +1,74 @@
+server:
+  config:
+    persistence:
+      default:
+        driver: "sql"
+
+        sql:
+          driver: "mysql8"
+          # host: mysql-server.privatesubnet.clustervcn.oraclevcn.com
+          host: 10.0.122.62
+          port: 3306
+          database: temporal
+          user: mysql_admin
+          secretName: temporal-secrets
+          secretKey: mysql_password
+          maxConns: 20
+          maxIdleConns: 20
+          maxConnLifetime: "1h"
+
+      visibility:
+        driver: "sql"
+
+        sql:
+          driver: "mysql8"
+          # host: mysql-server.privatesubnet.clustervcn.oraclevcn.com
+          host: 10.0.122.62
+          port: 3306
+          database: temporal_visibility
+          user: mysql_admin
+          secretName: temporal-secrets
+          secretKey: mysql_password
+          maxConns: 20
+          maxIdleConns: 20
+          maxConnLifetime: "1h"
+
+web:
+  enabled: true
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 8080
+    annotations: {}
+  ingress:
+    enabled: false
+
+  additionalEnvSecretName: temporal-web-env 
+
+cassandra:
+  enabled: false
+
+mysql:
+  enabled: true
+
+postgresql:
+  enabled: false
+
+elasticsearch:
+  enabled: false
+
+prometheus:
+  enabled: false
+
+grafana:
+  enabled: false
+
+schema:
+  createDatabase:
+    enabled: true
+  setup:
+    enabled: true
+    backoffLimit: 100
+  update:
+    enabled: true
+    backoffLimit: 100
