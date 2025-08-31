@@ -51,7 +51,7 @@ server:
           clientCaFiles:
             - /etc/temporal/tls/ca.crt
         client:
-          serverName: temporal.svc.cluster.local
+          serverName: temporal
           rootCaFiles:
             - /etc/temporal/tls/ca.crt
       frontend:
@@ -62,7 +62,7 @@ server:
           clientCaFiles:
             - /etc/temporal/tls/ca.crt
         client:
-          serverName: temporal.svc.cluster.local
+          serverName: temporal
           rootCaFiles:
             - /etc/temporal/tls/ca.crt
 
@@ -79,7 +79,7 @@ adminTools:
     - name: TEMPORAL_ADDRESS
       value: temporal.svc.cluster.local:7233
     - name: TEMPORAL_TLS_SERVER_NAME
-      value: temporal.svc.cluster.local
+      value: temporal
     - name: TEMPORAL_TLS_CERT
       value: /etc/temporal/tls/tls.crt
     - name: TEMPORAL_TLS_KEY
@@ -113,7 +113,7 @@ web:
     - name: TEMPORAL_ADDRESS
       value: temporal.svc.cluster.local:7233
     - name: TEMPORAL_TLS_SERVER_NAME
-      value: temporal.svc.cluster.local
+      value: temporal
     - name: TEMPORAL_TLS_CERT
       value: /etc/temporal/tls/tls.crt
     - name: TEMPORAL_TLS_KEY

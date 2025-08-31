@@ -25,7 +25,7 @@ spec:
             - name: TEMPORAL_ADDRESS
               value: temporal-frontend.temporal.svc.cluster.local:7233
             - name: TEMPORAL_TLS_SERVER_NAME
-              value: temporal.svc.cluster.local
+              value: temporal
             - name: TEMPORAL_TLS_CERT
               value: /etc/temporal/tls/tls.crt
             - name: TEMPORAL_TLS_KEY

@@ -8,16 +8,11 @@ spec:
   issuerRef:
     name: temporal-ca-issuer
     kind: Issuer
-  commonName: temporal.svc.cluster.local
+  commonName: temporal
   dnsNames:
     - temporal
     - temporal.svc
     - temporal.svc.cluster.local
-    - temporal-frontend.temporal.svc
-    - temporal-frontend.temporal.svc.cluster.local
-    - temporal-history.temporal.svc.cluster.local
-    - temporal-matching.temporal.svc.cluster.local
-    - temporal-admintools.temporal.svc.cluster.local
   duration: 8760h
   privateKey:
     algorithm: RSA
