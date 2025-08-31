@@ -156,6 +156,7 @@ tasks:
       - task: upgrade-identity
       - task: upgrade-cert-manager
       - task: upgrade-argocd
+      - task: upgrade-coredns
       - task: upgrade-kustomize
       - task: upgrade-temporal
 
@@ -242,6 +243,12 @@ tasks:
     desc: Uninstall ArgoCD Helm chart
     cmds:
       - helm uninstall argocd
+
+  upgrade-coredns:
+    desc: Install or upgrade CoreDNS Helm chart
+    dir: helm/coredns
+    cmds:
+      - kubectl apply -f ./manifests/dns.yaml
 
   upgrade-temporal:
     desc: Install or upgrade Temporal Helm chart

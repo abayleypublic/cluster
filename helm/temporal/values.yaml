@@ -15,8 +15,7 @@ server:
 
         sql:
           driver: "mysql8"
-          # host: mysql-server.privatesubnet.clustervcn.oraclevcn.com
-          host: 10.0.122.62
+          host: mysql-server.privatesubnet.clustervcn.oraclevcn.com
           port: 3306
           database: temporal
           user: mysql_admin
@@ -31,8 +30,7 @@ server:
 
         sql:
           driver: "mysql8"
-          # host: mysql-server.privatesubnet.clustervcn.oraclevcn.com
-          host: 10.0.122.62
+          host: mysql-server.privatesubnet.clustervcn.oraclevcn.com
           port: 3306
           database: temporal_visibility
           user: mysql_admin
