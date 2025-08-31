@@ -23,9 +23,6 @@ variable "ampere_agent_nodes" {
     "agent-1" = {
       # It would appear that only availability domain 1 has the Ampere A1 compute shape available 
       availability_domain = "CzwP:UK-LONDON-1-AD-1"
-    },
-    "agent-2" = {
-      availability_domain = "CzwP:UK-LONDON-1-AD-1"
     }
   }
 }

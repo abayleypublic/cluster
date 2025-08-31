@@ -1,0 +1,150 @@
+server:
+  additionalVolumes:
+    - name: temporal-server-tls
+      secret:
+        secretName: temporal-server-tls
+  additionalVolumeMounts:
+    - name: temporal-server-tls
+      mountPath: /etc/temporal/tls
+      readOnly: true
+
+  config:
+    persistence:
+      default:
+        driver: "sql"
+
+        sql:
+          driver: "mysql8"
+          host: mysql-server.privatesubnet.clustervcn.oraclevcn.com
+          port: 3306
+          database: temporal
+          user: mysql_admin
+          secretName: temporal-secrets
+          secretKey: mysql_password
+          maxConns: 20
+          maxIdleConns: 20
+          maxConnLifetime: "1h"
+
+      visibility:
+        driver: "sql"
+
+        sql:
+          driver: "mysql8"
+          host: mysql-server.privatesubnet.clustervcn.oraclevcn.com
+          port: 3306
+          database: temporal_visibility
+          user: mysql_admin
+          secretName: temporal-secrets
+          secretKey: mysql_password
+          maxConns: 20
+          maxIdleConns: 20
+          maxConnLifetime: "1h"
+
+    tls:
+      internode:
+        server:
+          certFile: /etc/temporal/tls/tls.crt
+          keyFile: /etc/temporal/tls/tls.key
+          requireClientAuth: true
+          clientCaFiles:
+            - /etc/temporal/tls/ca.crt
+        client:
+          serverName: temporal
+          rootCaFiles:
+            - /etc/temporal/tls/ca.crt
+      frontend:
+        server:
+          certFile: /etc/temporal/tls/tls.crt
+          keyFile: /etc/temporal/tls/tls.key
+          requireClientAuth: true        
+          clientCaFiles:
+            - /etc/temporal/tls/ca.crt
+        client:
+          serverName: temporal
+          rootCaFiles:
+            - /etc/temporal/tls/ca.crt
+
+adminTools:
+  additionalVolumes:
+    - name: temporal-admin-client
+      secret:
+        secretName: temporal-admin-client
+  additionalVolumeMounts:
+    - name: temporal-admin-client
+      mountPath: /etc/temporal/tls
+      readOnly: true
+  additionalEnv:
+    - name: TEMPORAL_ADDRESS
+      value: temporal.svc.cluster.local:7233
+    - name: TEMPORAL_TLS_SERVER_NAME
+      value: temporal
+    - name: TEMPORAL_TLS_CERT
+      value: /etc/temporal/tls/tls.crt
+    - name: TEMPORAL_TLS_KEY
+      value: /etc/temporal/tls/tls.key
+    - name: TEMPORAL_TLS_CA
+      value: /etc/temporal/tls/ca.crt
+    - name: TEMPORAL_TLS_ENABLE_HOST_VERIFICATION
+      value: "true"
+
+web:
+  enabled: true
+  replicaCount: 1
+  service:
+    type: ClusterIP
+    port: 8080
+    annotations: {}
+  ingress:
+    enabled: false
+
+  additionalEnvSecretName: temporal-web-env 
+
+  additionalVolumes:
+    - name: temporal-admin-client
+      secret:
+        secretName: temporal-admin-client
+  additionalVolumeMounts:
+    - name: temporal-admin-client
+      mountPath: /etc/temporal/tls
+      readOnly: true
+  additionalEnv:
+    - name: TEMPORAL_ADDRESS
+      value: temporal.svc.cluster.local:7233
+    - name: TEMPORAL_TLS_SERVER_NAME
+      value: temporal
+    - name: TEMPORAL_TLS_CERT
+      value: /etc/temporal/tls/tls.crt
+    - name: TEMPORAL_TLS_KEY
+      value: /etc/temporal/tls/tls.key
+    - name: TEMPORAL_TLS_CA
+      value: /etc/temporal/tls/ca.crt
+    - name: TEMPORAL_TLS_ENABLE_HOST_VERIFICATION
+      value: "true"
+
+cassandra:
+  enabled: false
+
+mysql:
+  enabled: true
+
+postgresql:
+  enabled: false
+
+elasticsearch:
+  enabled: false
+
+prometheus:
+  enabled: false
+
+grafana:
+  enabled: false
+
+schema:
+  createDatabase:
+    enabled: true
+  setup:
+    enabled: true
+    backoffLimit: 100
+  update:
+    enabled: true
+    backoffLimit: 100

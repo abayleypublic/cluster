@@ -1,0 +1,44 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: temporal-bootstrap-namespaces
+  namespace: temporal
+spec:
+  template:
+    spec:
+      restartPolicy: OnFailure
+      containers:
+        - name: bootstrap-namespaces
+          image: temporalio/admin-tools:1.28.1-tctl-1.18.4-cli-1.4.1
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              set -e
+              for ns in "default:3d" "staging:7d" "production:14d"; do
+                NAME=$(echo $ns | cut -d: -f1)
+                RET=$(echo $ns | cut -d: -f2)
+                echo ">> Ensuring namespace $NAME exists with retention $RET"
+                temporal operator namespace describe -n "$NAME" \
+                || temporal operator namespace create -n "$NAME" --retention "$RET"
+              done
+          env:
+            - name: TEMPORAL_ADDRESS
+              value: temporal-frontend.temporal.svc.cluster.local:7233
+            - name: TEMPORAL_TLS_SERVER_NAME
+              value: temporal
+            - name: TEMPORAL_TLS_CERT
+              value: /etc/temporal/tls/tls.crt
+            - name: TEMPORAL_TLS_KEY
+              value: /etc/temporal/tls/tls.key
+            - name: TEMPORAL_TLS_CA
+              value: /etc/temporal/tls/ca.crt
+            - name: TEMPORAL_TLS_ENABLE_HOST_VERIFICATION
+              value: "true"
+          volumeMounts:
+            - name: temporal-admin-client
+              mountPath: /etc/temporal/tls
+              readOnly: true
+      volumes:
+        - name: temporal-admin-client
+          secret:
+            secretName: temporal-admin-client
