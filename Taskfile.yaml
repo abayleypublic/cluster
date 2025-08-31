@@ -157,6 +157,7 @@ tasks:
       - task: upgrade-cert-manager
       - task: upgrade-argocd
       - task: upgrade-kustomize
+      - task: upgrade-temporal
 
   upgrade-identity:
     desc: Install or upgrade manifests for identity
@@ -249,8 +250,13 @@ tasks:
       - kubectl create namespace temporal --dry-run=client -o yaml | kubectl apply -f -
       - kubectl apply -f ./manifests/secrets.yaml
       - kubectl apply -f ./manifests/route.yaml
+      - kubectl apply -f ./manifests/ca.yaml
+      - kubectl apply -f ./manifests/certs.yaml
       - helm dependencies update ./chart
       - helm upgrade --install -f values.yaml --create-namespace --namespace=temporal temporal ./chart
+      - kubectl delete job temporal-bootstrap-namespaces -n temporal --ignore-not-found
+      - kubectl apply -f ./manifests/namespaces.yaml
+
 
   uninstall-temporal:
     desc: Uninstall Temporal Helm chart

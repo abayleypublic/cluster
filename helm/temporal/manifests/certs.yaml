@@ -1,0 +1,40 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: temporal-server-tls
+  namespace: temporal
+spec:
+  secretName: temporal-server-tls
+  issuerRef:
+    name: temporal-ca-issuer
+    kind: Issuer
+  commonName: temporal.svc.cluster.local
+  dnsNames:
+    - temporal
+    - temporal.svc
+    - temporal.svc.cluster.local
+    - temporal-frontend.temporal.svc
+    - temporal-frontend.temporal.svc.cluster.local
+    - temporal-history.temporal.svc.cluster.local
+    - temporal-matching.temporal.svc.cluster.local
+    - temporal-admintools.temporal.svc.cluster.local
+  duration: 8760h
+  privateKey:
+    algorithm: RSA
+    size: 2048
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: temporal-admin-client
+  namespace: temporal
+spec:
+  secretName: temporal-admin-client
+  duration: 8760h 
+  renewBefore: 720h
+  commonName: temporal-admin
+  usages:
+    - client auth
+  issuerRef:
+    name: temporal-ca-issuer
+    kind: Issuer

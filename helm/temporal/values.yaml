@@ -1,4 +1,13 @@
 server:
+  additionalVolumes:
+    - name: temporal-server-tls
+      secret:
+        secretName: temporal-server-tls
+  additionalVolumeMounts:
+    - name: temporal-server-tls
+      mountPath: /etc/temporal/tls
+      readOnly: true
+
   config:
     persistence:
       default:
@@ -33,6 +42,53 @@ server:
           maxIdleConns: 20
           maxConnLifetime: "1h"
 
+    tls:
+      internode:
+        server:
+          certFile: /etc/temporal/tls/tls.crt
+          keyFile: /etc/temporal/tls/tls.key
+          requireClientAuth: true
+          clientCaFiles:
+            - /etc/temporal/tls/ca.crt
+        client:
+          serverName: temporal.svc.cluster.local
+          rootCaFiles:
+            - /etc/temporal/tls/ca.crt
+      frontend:
+        server:
+          certFile: /etc/temporal/tls/tls.crt
+          keyFile: /etc/temporal/tls/tls.key
+          requireClientAuth: true        
+          clientCaFiles:
+            - /etc/temporal/tls/ca.crt
+        client:
+          serverName: temporal.svc.cluster.local
+          rootCaFiles:
+            - /etc/temporal/tls/ca.crt
+
+adminTools:
+  additionalVolumes:
+    - name: temporal-admin-client
+      secret:
+        secretName: temporal-admin-client
+  additionalVolumeMounts:
+    - name: temporal-admin-client
+      mountPath: /etc/temporal/tls
+      readOnly: true
+  additionalEnv:
+    - name: TEMPORAL_ADDRESS
+      value: temporal.svc.cluster.local:7233
+    - name: TEMPORAL_TLS_SERVER_NAME
+      value: temporal.svc.cluster.local
+    - name: TEMPORAL_TLS_CERT
+      value: /etc/temporal/tls/tls.crt
+    - name: TEMPORAL_TLS_KEY
+      value: /etc/temporal/tls/tls.key
+    - name: TEMPORAL_TLS_CA
+      value: /etc/temporal/tls/ca.crt
+    - name: TEMPORAL_TLS_ENABLE_HOST_VERIFICATION
+      value: "true"
+
 web:
   enabled: true
   replicaCount: 1
@@ -44,6 +100,28 @@ web:
     enabled: false
 
   additionalEnvSecretName: temporal-web-env 
+
+  additionalVolumes:
+    - name: temporal-admin-client
+      secret:
+        secretName: temporal-admin-client
+  additionalVolumeMounts:
+    - name: temporal-admin-client
+      mountPath: /etc/temporal/tls
+      readOnly: true
+  additionalEnv:
+    - name: TEMPORAL_ADDRESS
+      value: temporal.svc.cluster.local:7233
+    - name: TEMPORAL_TLS_SERVER_NAME
+      value: temporal.svc.cluster.local
+    - name: TEMPORAL_TLS_CERT
+      value: /etc/temporal/tls/tls.crt
+    - name: TEMPORAL_TLS_KEY
+      value: /etc/temporal/tls/tls.key
+    - name: TEMPORAL_TLS_CA
+      value: /etc/temporal/tls/ca.crt
+    - name: TEMPORAL_TLS_ENABLE_HOST_VERIFICATION
+      value: "true"
 
 cassandra:
   enabled: false
