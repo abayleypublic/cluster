@@ -11,7 +11,6 @@
 - Wait for webhook when installing external secrets & cert manager charts
 - Better handling of 500 error when email is not verified
 - Google login with Auth0 - set up for production
-- DNS for connecting to MySQL server from Temporal
 
 - Document process to manually create & import federated settings org config `terraform import module.mongodb.mongodbatlas_federated_settings_org_config.org_config [federated settings id]-[org id]` before being able to operate on it.
 
