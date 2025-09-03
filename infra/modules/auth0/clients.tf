@@ -3,10 +3,15 @@
 # =========
 
 resource "auth0_client" "staging_client" {
-  name                = "Staging"
-  description         = "Portfolio staging OIDC client"
-  app_type            = "regular_web"
-  callbacks           = ["https://activity.stg.austinbayley.co.uk/oauth2/callback", "https://roam.stg.austinbayley.co.uk/oauth2/callback", "https://temporal.austinbayley.co.uk/auth/sso/callback"]
+  name        = "Staging"
+  description = "Portfolio staging OIDC client"
+  app_type    = "regular_web"
+  callbacks = [
+    "https://activity.stg.austinbayley.co.uk/oauth2/callback",
+    "https://roam.stg.austinbayley.co.uk/oauth2/callback",
+    "https://temporal.austinbayley.co.uk/auth/sso/callback",
+    "https://queue.stg.austinbayley.co.uk/oauth2/callback"
+  ]
   allowed_logout_urls = ["https://*.stg.austinbayley.co.uk"]
   web_origins         = ["https://*.stg.austinbayley.co.uk"]
   oidc_conformant     = true
@@ -34,10 +39,13 @@ resource "auth0_connection_clients" "staging_db_clients" {
 # =========
 
 resource "auth0_client" "production_client" {
-  name                = "Production"
-  description         = "Portfolio production OIDC client"
-  app_type            = "regular_web"
-  callbacks           = ["https://activity.austinbayley.co.uk/oauth2/callback"]
+  name        = "Production"
+  description = "Portfolio production OIDC client"
+  app_type    = "regular_web"
+  callbacks = [
+    "https://activity.austinbayley.co.uk/oauth2/callback",
+    "https://queue.austinbayley.co.uk/oauth2/callback"
+  ]
   allowed_logout_urls = ["https://*.austinbayley.co.uk"]
   web_origins         = ["https://*.austinbayley.co.uk"]
   oidc_conformant     = true
