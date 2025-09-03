@@ -71,8 +71,6 @@ spec:
       kind: Service
       name: oauth2-proxy
 ---
-
----
 apiVersion: gateway.networking.k8s.io/v1beta1
 kind: ReferenceGrant
 metadata:
@@ -85,6 +83,23 @@ spec:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
       namespace: stg-roam
+  to:
+    - group: ""
+      kind: Service
+      name: oauth2-proxy
+---
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: ReferenceGrant
+metadata:
+  name: allow-queue-ext-auth
+spec:
+  from:
+    - group: gateway.envoyproxy.io
+      kind: SecurityPolicy
+      namespace: stg-queue
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      namespace: stg-queue
   to:
     - group: ""
       kind: Service
