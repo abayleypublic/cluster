@@ -15,6 +15,9 @@
 
 - Document process to manually create & import federated settings org config `terraform import module.mongodb.mongodbatlas_federated_settings_org_config.org_config [federated settings id]-[org id]` before being able to operate on it.
 
+- Move Temporal (and any other relevant thing) into apps. 
+- Ensure Argo chart will recursively find apps in apps & break things out into subdirectories.
+
 ## Design
 
 ### Decisions
