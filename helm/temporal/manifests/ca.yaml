@@ -9,7 +9,7 @@ apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
   name: temporal-root-ca
-  namespace: temporal
+  namespace: cert-manager
 spec:
   secretName: temporal-ca          
   isCA: true
@@ -24,7 +24,7 @@ spec:
     group: cert-manager.io
 ---
 apiVersion: cert-manager.io/v1
-kind: Issuer
+kind: ClusterIssuer
 metadata:
   name: temporal-ca-issuer
   namespace: temporal

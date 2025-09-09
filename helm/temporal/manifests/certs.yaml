@@ -7,12 +7,16 @@ spec:
   secretName: temporal-server-tls
   issuerRef:
     name: temporal-ca-issuer
-    kind: Issuer
+    kind: ClusterIssuer
   commonName: temporal
   dnsNames:
     - temporal
     - temporal.svc
     - temporal.svc.cluster.local
+    - temporal-frontend
+    - temporal-frontend.temporal
+    - temporal-frontend.temporal.svc
+    - temporal-frontend.temporal.svc.cluster.local
   duration: 8760h
   privateKey:
     algorithm: RSA
@@ -32,4 +36,4 @@ spec:
     - client auth
   issuerRef:
     name: temporal-ca-issuer
-    kind: Issuer
+    kind: ClusterIssuer
