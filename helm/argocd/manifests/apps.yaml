@@ -36,6 +36,9 @@ spec:
     repoURL: https://github.com/abayleypublic/apps
     targetRevision: HEAD
     path: .
+    directory:
+      recurse: true
+      include: '{*.yml,*.yaml}'
   destination:
     server: https://kube.austinbayley.co.uk:6443
     namespace: argocd
@@ -43,7 +46,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
-  directory:
-    recurse: true
-    include: 
-      - *.yaml
