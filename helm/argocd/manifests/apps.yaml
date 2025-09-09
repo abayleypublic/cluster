@@ -35,7 +35,7 @@ spec:
   source:
     repoURL: https://github.com/abayleypublic/apps
     targetRevision: HEAD
-    path: manifests
+    path: .
   destination:
     server: https://kube.austinbayley.co.uk:6443
     namespace: argocd
@@ -43,3 +43,7 @@ spec:
     automated:
       prune: true
       selfHeal: true
+  directory:
+    recurse: true
+    include: 
+      - *.yaml
