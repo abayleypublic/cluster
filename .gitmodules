@@ -7,6 +7,3 @@
 [submodule "submodules/argo"]
 	path = submodules/argo
 	url = https://github.com/argoproj/argo-helm.git
-[submodule "submodules/temporal"]
-	path = submodules/temporal
-	url = https://github.com/temporalio/helm-charts.git
