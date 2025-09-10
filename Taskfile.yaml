@@ -157,7 +157,6 @@ tasks:
       - task: upgrade-cert-manager
       - task: upgrade-argocd
       - task: upgrade-coredns
-      - task: upgrade-kustomize
       - task: upgrade-temporal
 
   upgrade-identity:
@@ -269,12 +268,6 @@ tasks:
     desc: Uninstall Temporal Helm chart
     cmds:
       - helm uninstall temporal
-
-  upgrade-kustomize:
-    desc: Install or upgrade Kubernetes manifests via Kustomize
-    dir: kustomize
-    cmds:
-      - kubectl apply -k .
 
   # ==========
   # Runtime
