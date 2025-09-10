@@ -38,7 +38,7 @@ spec:
     path: apps
     directory:
       recurse: true
-      include: '{*.yml,*.yaml}'
+      include: '{application.yaml}'
   destination:
     server: https://kube.austinbayley.co.uk:6443
     namespace: argocd
