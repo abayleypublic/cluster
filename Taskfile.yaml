@@ -153,19 +153,9 @@ tasks:
       - task: upgrade-cilium
       - task: upgrade-envoy
       - task: upgrade-external-secrets
-      - task: upgrade-identity
       - task: upgrade-cert-manager
       - task: upgrade-argocd
       - task: upgrade-coredns
-
-  upgrade-identity:
-    desc: Install or upgrade manifests for identity
-    dir: helm/identity
-    cmds:
-      - kubectl apply -f ./manifests/binding.yaml
-      - kubectl apply -f ./manifests/route.yaml
-      - kubectl apply -f ./manifests/secrets.yaml
-      - kubectl apply -f ./manifests/gar.yaml
 
   upgrade-cilium:
     desc: Install or upgrade Cilium Helm chart
