@@ -155,7 +155,6 @@ tasks:
       - task: upgrade-external-secrets
       - task: upgrade-cert-manager
       - task: upgrade-argocd
-      - task: upgrade-coredns
 
   upgrade-cilium:
     desc: Install or upgrade Cilium Helm chart
@@ -230,12 +229,6 @@ tasks:
     desc: Uninstall ArgoCD Helm chart
     cmds:
       - helm uninstall argocd
-
-  upgrade-coredns:
-    desc: Install or upgrade CoreDNS Helm chart
-    dir: helm/coredns
-    cmds:
-      - kubectl apply -f ./manifests/dns.yaml
 
   # ==========
   # Runtime
