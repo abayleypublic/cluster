@@ -35,7 +35,7 @@ spec:
   source:
     repoURL: https://github.com/abayleypublic/apps
     targetRevision: HEAD
-    path: .
+    path: deploy
     directory:
       recurse: true
       include: '{*application.yaml,*project.yaml}'
