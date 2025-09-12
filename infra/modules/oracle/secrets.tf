@@ -170,3 +170,16 @@ resource "oci_vault_secret" "stg_auth_cookie_secret" {
     content      = base64encode(random_password.stg_cookie_secret.result)
   }
 }
+
+resource "oci_vault_secret" "grafana_cloud_otlp_api_key" {
+  compartment_id = oci_identity_compartment.cluster.id
+  secret_name    = "grafana_cloud_otlp_api_key"
+  vault_id       = oci_kms_vault.secret_vault.id
+  key_id         = oci_kms_key.master_encryption_key.id
+  description    = "Grafana Cloud OTLP API Key"
+
+  secret_content {
+    content_type = "BASE64"
+    content      = "UkVQTEFDRV9NRQ=="
+  }
+}
