@@ -71,3 +71,8 @@ variable "auth0_client_secret" {
   description = "Auth0 client secret."
   type        = string
 }
+
+variable "grafana_access_token" {
+  description = "Grafana access token."
+  type        = string
+}
