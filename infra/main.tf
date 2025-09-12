@@ -48,6 +48,11 @@ terraform {
       source  = "auth0/auth0"
       version = "~> 1.25.0"
     }
+
+    grafana = {
+      source  = "grafana/grafana"
+      version = ">= 2.9.0"
+    }
   }
 }
 
@@ -79,6 +84,10 @@ provider "auth0" {
   client_secret = var.auth0_client_secret
 }
 
+provider "grafana" {
+  cloud_access_policy_token = var.grafana_access_token
+}
+
 module "cluster" {
   source         = "./modules/oracle"
   compartment_id = var.tenancy_ocid
@@ -103,4 +112,8 @@ module "mongodb" {
 
 module "auth0" {
   source = "./modules/auth0"
+}
+
+module "grafana" {
+  source = "./modules/grafana"
 }
