@@ -20,3 +20,6 @@ hubble:
     enabled: true
   ui:
     enabled: true
+
+bpf:
+  enableTCX: true
