@@ -20,8 +20,9 @@ resource "oci_core_instance" "server" {
   }
 
   source_details {
-    source_type = "image"
-    source_id   = var.ampere_image_id
+    source_type             = "image"
+    source_id               = var.ampere_image_id
+    boot_volume_size_in_gbs = "50"
   }
 
   create_vnic_details {
@@ -73,8 +74,9 @@ resource "oci_core_instance" "ampere_agent" {
   }
 
   source_details {
-    source_type = "image"
-    source_id   = var.ampere_image_id
+    source_type             = "image"
+    source_id               = var.ampere_image_id
+    boot_volume_size_in_gbs = "50"
   }
 
   create_vnic_details {
