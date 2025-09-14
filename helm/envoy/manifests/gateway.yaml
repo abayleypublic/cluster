@@ -6,16 +6,16 @@ metadata:
 spec:
   extraArgs:
     - --use-dynamic-base-id
+  # Must monitor this as it was added after the svc is already deployed
+  telemetry:
+    tracing:
+      samplingRate: 100
+      provider:
+        host: otel-collector.observability.svc.cluster.local
+        port: 4317
+        type: OpenTelemetry
   provider:
     type: Kubernetes
-    # Must monitor this as it was added after the svc is already deployed
-    telemetry:
-      tracing:
-        samplingRate: 100
-        provider:
-          host: otel-collector.observability.svc.cluster.local
-          port: 4317
-          type: OpenTelemetry
     kubernetes:
       envoyDaemonSet:
         patch:
