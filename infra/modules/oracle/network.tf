@@ -368,6 +368,11 @@ resource "oci_load_balancer_listener" "k3s_https_listener" {
   default_backend_set_name = oci_load_balancer_backend_set.k3s_https_backend_set.name
   port                     = 443
   protocol                 = "TCP"
+
+  connection_configuration {
+    idle_timeout_in_seconds            = 300
+    backend_tcp_proxy_protocol_version = 2
+  }
 }
 
 # API Backend Set
