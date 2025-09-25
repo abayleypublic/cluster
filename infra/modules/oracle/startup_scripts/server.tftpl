@@ -4,8 +4,31 @@
 # getting the k3s cluster to start properly.
 systemctl disable firewalld --now
 
+# Configure Pod Security Admission
+mkdir -p -m 0755 /var/lib/rancher/k3s/server
+cat >/var/lib/rancher/k3s/server/psa.yaml <<'YAML'
+apiVersion: apiserver.config.k8s.io/v1
+kind: AdmissionConfiguration
+plugins:
+- name: PodSecurity
+  configuration:
+    apiVersion: pod-security.admission.config.k8s.io/v1
+    kind: PodSecurityConfiguration
+    defaults:
+      enforce: "baseline"
+      enforce-version: "latest"
+      audit: "restricted"
+      audit-version: "latest"
+      warn: "restricted"
+      warn-version: "latest"
+    exemptions:
+      usernames: []
+      runtimeClasses: []
+      namespaces: [kube-system]
+YAML
+
 # Install k3s
-curl -sfL https://get.k3s.io | K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) sh -s - server \
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.34.1+k3s1 K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) sh -s - server \
   --bind-address 0.0.0.0 \
   --cluster-cidr 10.0.0.0/18 \
   --service-cidr 10.0.64.0/18 \
@@ -20,6 +43,7 @@ curl -sfL https://get.k3s.io | K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) 
   --kube-apiserver-arg=service-account-jwks-uri=https://kube.austinbayley.co.uk/openid/v1/jwks \
   --kube-apiserver-arg=service-account-signing-key-file=/var/lib/rancher/k3s/server/tls/service.key \
   --kube-apiserver-arg=service-account-key-file=/var/lib/rancher/k3s/server/tls/service.key \
+  --kube-apiserver-arg="admission-control-config-file=/var/lib/rancher/k3s/server/psa.yaml" \
   --kube-apiserver-arg=anonymous-auth=true
 
 # Install OCI CLI. This is used to update secrets from the k3s install. DNF did not work when trying
