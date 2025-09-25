@@ -193,6 +193,7 @@ tasks:
       - kubectl apply -f ./crds/bundle.yaml
       - helm dependency build ./chart
       - helm upgrade --install -f values.yaml --create-namespace --namespace=external-secrets external-secrets ./chart
+      - kubectl -n external-secrets rollout status deploy/external-secrets-webhook --timeout=120s
       - kubectl apply -f ./manifests/store.yaml
 
   uninstall-external-secrets:
@@ -206,6 +207,7 @@ tasks:
     cmds:
       - helm repo add jetstack https://charts.jetstack.io --force-update
       - helm upgrade --install -f values.yaml --create-namespace --namespace=cert-manager --version v1.17.2 cert-manager jetstack/cert-manager
+      - kubectl -n cert-manager rollout status deploy/cert-manager-webhook --timeout=120s
       - kubectl apply -f ./manifests/secrets.yaml
       - kubectl apply -f ./manifests/issuer.yaml
 
