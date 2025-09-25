@@ -8,4 +8,16 @@ resource "google_artifact_registry_repository" "docker_repository" {
   docker_config {
     immutable_tags = true
   }
+
+  cleanup_policy_dry_run = true
+
+  cleanup_policies {
+    action = "KEEP"
+    id     = "cleanup_old_versions"
+
+    most_recent_versions {
+      keep_count            = 2
+      package_name_prefixes = []
+    }
+  }
 }
