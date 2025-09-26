@@ -180,6 +180,7 @@ tasks:
         -f values.yaml
       - kubectl apply -f ./manifests/gateway.yaml
       - kubectl apply -f ./manifests/policy.yaml
+      - kubectl apply -f ./manifests/valkey.yaml
 
   uninstall-envoy:
     desc: Uninstall Envoy Gateway Helm chart
