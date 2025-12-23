@@ -33,7 +33,7 @@ resource "oci_mysql_mysql_db_system" "mysql_system" {
   fault_domain            = "FAULT-DOMAIN-3"
   hostname_label          = "mysql-server"
   is_highly_available     = false
-  mysql_version           = "9.4.1"
+  mysql_version           = "9.5.1"
   port                    = 3306
   port_x                  = 33060
   state                   = "ACTIVE"
