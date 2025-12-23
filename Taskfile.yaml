@@ -177,7 +177,7 @@ tasks:
     cmds:
       - kubectl apply -f ./crds/bundle.yaml
       - helm dependency build ./chart
-      - helm upgrade --install -f values.yaml --create-namespace --namespace=external-secrets external-secrets ./chart
+      - helm upgrade --install -f values.yaml --create-namespace --namespace=external-secrets external-secrets ./chart --wait
       - kubectl apply -f ./manifests/store.yaml
 
   uninstall-external-secrets:
