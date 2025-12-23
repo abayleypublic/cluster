@@ -1,11 +1,6 @@
 #!/bin/bash
 set +e 
 
-# Set a temporary password for opc user for console access debugging
-echo "opc:TemporaryDebugPassword123!" | chpasswd
-sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/' /etc/ssh/sshd_config
-systemctl reload sshd || true
-
 # Log everything for debugging
 exec 1> >(tee -a /var/log/startup-custom.log)
 exec 2>&1
