@@ -158,7 +158,7 @@ tasks:
     cmds:
       - |
         helm upgrade --install eg oci://docker.io/envoyproxy/gateway-helm \
-        --version v1.4.1 \
+        --version v1.6.1 \
         -n envoy-gateway-system \
         --create-namespace \
         -f values.yaml
@@ -175,7 +175,6 @@ tasks:
     desc: Install or upgrade External Secrets Helm chart
     dir: helm/external-secrets
     cmds:
-      - kubectl apply -f ./crds/bundle.yaml
       - helm dependency build ./chart
       - helm upgrade --install -f values.yaml --create-namespace --namespace=external-secrets external-secrets ./chart --wait
       - kubectl apply -f ./manifests/store.yaml
@@ -190,7 +189,7 @@ tasks:
     dir: helm/cert-manager
     cmds:
       - helm repo add jetstack https://charts.jetstack.io --force-update
-      - helm upgrade --install -f values.yaml --create-namespace --namespace=cert-manager --version v1.17.2 cert-manager jetstack/cert-manager
+      - helm upgrade --install -f values.yaml --create-namespace --namespace=cert-manager --version v1.19.2 cert-manager jetstack/cert-manager
       - kubectl apply -f ./manifests/secrets.yaml
       - kubectl apply -f ./manifests/issuer.yaml
 
