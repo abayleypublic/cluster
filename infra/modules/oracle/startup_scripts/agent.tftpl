@@ -1,6 +1,12 @@
 #!/bin/bash
+set +e 
 
+# Connections are disabled at the network level. This causes duplication & was a blocker to
+# getting the k3s cluster to start properly.
 systemctl disable firewalld --now
 
-curl -sfL https://get.k3s.io | K3S_URL=https://${server_ip}:6443 K3S_TOKEN=${k3s_token} sh -s - agent \
+# Disable SELinux - Oracle Linux 10 has incompatible SELinux policy for k3s
+setenforce 0
+
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.34.3+k3s1 K3S_URL=https://${server_ip}:6443 K3S_TOKEN=${k3s_token} INSTALL_K3S_SKIP_SELINUX_RPM=true sh -s - agent \
   --node-name $(hostname)

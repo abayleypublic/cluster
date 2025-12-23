@@ -73,7 +73,7 @@ git submodule update
 ## Install
 
 - Add necessary `.tfvars` (private key was generated here: https://cloud.oracle.com/identity/domains/my-profile/api-keys)
-- Run `task apply-infra`
+- Run `terraform apply`
 - Run `task merge-kube-config`
 - Update secrets with output of `cat ~/.kube/config` (k3s_client_key, k3s_ca_certificate, k3s_client_certificate)
 - Populate any other secrets (this will involve prep work like creating a Github App)

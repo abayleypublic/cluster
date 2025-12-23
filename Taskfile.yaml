@@ -2,22 +2,6 @@ version: "3"
 
 tasks:
   # ==========
-  # Terraform
-  # ==========
-
-  plan-infra:
-    dir: infra
-    desc: Plan infra
-    cmds:
-      - terraform plan -var-file="../.tfvars"
-
-  apply-infra:
-    dir: infra
-    desc: Apply infra
-    cmds:
-      - terraform apply -var-file="../.tfvars"
-
-  # ==========
   # OCI
   # ==========
 
@@ -193,7 +177,7 @@ tasks:
     cmds:
       - kubectl apply -f ./crds/bundle.yaml
       - helm dependency build ./chart
-      - helm upgrade --install -f values.yaml --create-namespace --namespace=external-secrets external-secrets ./chart
+      - helm upgrade --install -f values.yaml --create-namespace --namespace=external-secrets external-secrets ./chart --wait
       - kubectl apply -f ./manifests/store.yaml
 
   uninstall-external-secrets:

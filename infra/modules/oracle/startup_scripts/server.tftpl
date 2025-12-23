@@ -1,11 +1,25 @@
 #!/bin/bash
+set +e 
+
+# Log everything for debugging
+exec 1> >(tee -a /var/log/startup-custom.log)
+exec 2>&1
+echo "=== Startup script beginning at $(date) ==="
 
 # Connections are disabled at the network level. This causes duplication & was a blocker to
 # getting the k3s cluster to start properly.
+echo "Attempting to disable firewall..."
 systemctl disable firewalld --now
+echo "Firewall disable command completed with exit code: $?"
+systemctl status firewalld || echo "Firewall status check completed"
+
+# Disable SELinux - Oracle Linux 10 has incompatible SELinux policy for k3s
+echo "Disabling SELinux..."
+setenforce 0
+echo "SELinux set to permissive mode"
 
 # Install k3s
-curl -sfL https://get.k3s.io | K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) sh -s - server \
+curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION=v1.34.3+k3s1 K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) INSTALL_K3S_SKIP_SELINUX_RPM=true sh -s - server \
   --bind-address 0.0.0.0 \
   --cluster-cidr 10.0.0.0/18 \
   --service-cidr 10.0.64.0/18 \
@@ -21,6 +35,13 @@ curl -sfL https://get.k3s.io | K3S_TOKEN=${k3s_token} K3S_NODE_NAME=$(hostname) 
   --kube-apiserver-arg=service-account-signing-key-file=/var/lib/rancher/k3s/server/tls/service.key \
   --kube-apiserver-arg=service-account-key-file=/var/lib/rancher/k3s/server/tls/service.key \
   --kube-apiserver-arg=anonymous-auth=true
+
+echo "=== k3s installation command completed with exit code: $? at $(date) ==="
+echo "Checking if k3s service started..."
+systemctl status k3s || true
+echo "Checking if port 6443 is listening..."
+ss -tlnp | grep 6443 || echo "Port 6443 not found"
+echo "=== End of k3s installation section ==="
 
 # Install OCI CLI. This is used to update secrets from the k3s install. DNF did not work when trying
 # to install so going with the generic Linux install script.

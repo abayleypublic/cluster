@@ -8,12 +8,11 @@ resource "auth0_connection" "staging_db" {
   strategy             = "auth0"
   realms               = ["staging"]
 
-
   options {
     password_policy        = "good"
     brute_force_protection = true
     strategy_version       = 2
-    disable_signup         = false
+    disable_signup         = true
 
     password_history {
       enable = true
