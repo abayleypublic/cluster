@@ -175,8 +175,8 @@ tasks:
     desc: Install or upgrade External Secrets Helm chart
     dir: helm/external-secrets
     cmds:
-      - helm dependency build ./chart
-      - helm upgrade --install -f values.yaml --create-namespace --namespace=external-secrets external-secrets ./chart
+      - helm repo add external-secrets https://charts.external-secrets.io
+      - helm upgrade --install -f values.yaml --create-namespace --namespace=external-secrets external-secrets external-secrets/external-secrets --wait
       - kubectl apply -f ./manifests/store.yaml
 
   uninstall-external-secrets:
