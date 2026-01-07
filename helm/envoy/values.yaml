@@ -16,3 +16,5 @@ config:
         type: Redis
         redis:
           url: "valkey.envoy-gateway-system.svc.cluster.local:6379"
+    extensionApis:
+      enableBackend: true
