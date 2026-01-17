@@ -13,6 +13,14 @@ resource "auth0_connection" "staging_db" {
     brute_force_protection = true
     strategy_version       = 2
     disable_signup         = true
+    requires_username      = false
+
+    validation {
+      username {
+        min = 1
+        max = 15
+      }
+    }
 
     password_history {
       enable = true
@@ -59,6 +67,14 @@ resource "auth0_connection" "production_db" {
     brute_force_protection = true
     strategy_version       = 2
     disable_signup         = false
+    requires_username      = false
+
+    validation {
+      username {
+        min = 1
+        max = 15
+      }
+    }
 
     password_history {
       enable = true
