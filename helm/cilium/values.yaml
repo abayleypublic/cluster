@@ -13,7 +13,7 @@ gatewayAPI:
   enabled: false
 
 envoy:
-  enabled: true
+  enabled: false
 
 hubble:
   relay:
