@@ -44,7 +44,41 @@ resource "auth0_resource_server_scopes" "production_scopes" {
 
 resource "auth0_resource_server" "forms_api" {
   name          = "Forms"
-  identifier    = "forms"
+  identifier    = "https://forms.austinbayley.co.uk"
   signing_alg   = "RS256"
   token_dialect = "access_token"
+}
+
+resource "auth0_resource_server_scopes" "forms_scopes" {
+  resource_server_identifier = auth0_resource_server.forms_api.identifier
+
+  scopes {
+    name        = "read:users"
+    description = "Read user data"
+  }
+
+  scopes {
+    name        = "update:users"
+    description = "Update user data"
+  }
+
+  scopes {
+    name        = "create:users"
+    description = "Create user data"
+  }
+
+  scopes {
+    name        = "read:users_app_metadata"
+    description = "Read user app metadata"
+  }
+
+  scopes {
+    name        = "update:users_app_metadata"
+    description = "Update user app metadata"
+  }
+
+  scopes {
+    name        = "create:users_app_metadata"
+    description = "Create user app metadata"
+  }
 }

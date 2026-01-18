@@ -5,13 +5,15 @@ resource "auth0_client_credentials" "auth0_forms_client_credentials" {
 }
 
 resource "auth0_flow_vault_connection" "auth0_connection" {
-  app_id = "AUTH0"
-  name   = "Auth0 M2M Connection"
+  app_id       = "AUTH0"
+  name         = "Auth0 M2M Connection"
+  account_name = var.auth0_domain
   setup = {
     client_id     = auth0_client.forms_client.client_id
     client_secret = auth0_client_credentials.auth0_forms_client_credentials.client_secret
-    domain        = "forms"
+    domain        = var.auth0_domain
     type          = "OAUTH_APP"
+    audience      = auth0_resource_server.forms_api.identifier
   }
 }
 
@@ -24,9 +26,7 @@ resource "auth0_flow" "update_user_details" {
     mask_output   = false
     params = {
       changes = {
-        user_metadata = {
-          full_name = "{{fields.full_name}}"
-        }
+        name = "{{fields.full_name}}"
       }
       user_id       = "{{context.user.user_id}}"
       connection_id = auth0_flow_vault_connection.auth0_connection.id
@@ -73,6 +73,19 @@ resource "auth0_form" "user_details" {
             required  = true
             sensitive = false
             type      = "TEXT"
+          },
+          {
+            category = "BLOCK"
+            id       = "divider_D5WZ"
+            type     = "DIVIDER"
+          },
+          {
+            category = "BLOCK"
+            config = {
+              content = "<p>📝 Please verify your email address to avoid authentication errors</p>"
+            }
+            id   = "rich_text_NFeE"
+            type = "RICH_TEXT"
           },
           {
             category = "BLOCK"

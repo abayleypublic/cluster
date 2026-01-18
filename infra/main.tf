@@ -111,7 +111,8 @@ module "mongodb" {
 }
 
 module "auth0" {
-  source = "./modules/auth0"
+  source       = "./modules/auth0"
+  auth0_domain = var.auth0_domain
 }
 
 module "grafana" {

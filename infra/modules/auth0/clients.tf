@@ -89,3 +89,10 @@ resource "auth0_client" "forms_client" {
     alg = "RS256"
   }
 }
+
+resource "auth0_client_grant" "forms_api_grant" {
+  client_id = auth0_client.forms_client.id
+  audience  = auth0_resource_server.forms_api.identifier
+  scopes    = ["read:users", "update:users", "create:users", "read:users_app_metadata", "update:users_app_metadata", "create:users_app_metadata"]
+}
+
