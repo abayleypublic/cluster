@@ -74,3 +74,18 @@ resource "auth0_connection_clients" "production_google_clients" {
     auth0_client.production_client.id,
   ]
 }
+
+# ==========
+# Forms
+# =========
+
+resource "auth0_client" "forms_client" {
+  name            = "Forms"
+  description     = "Forms OIDC client"
+  app_type        = "non_interactive"
+  oidc_conformant = true
+
+  jwt_configuration {
+    alg = "RS256"
+  }
+}

@@ -37,3 +37,14 @@ resource "auth0_resource_server_scopes" "production_scopes" {
     description = "Read user data"
   }
 }
+
+# ==========
+# Forms
+# =========
+
+resource "auth0_resource_server" "forms_api" {
+  name          = "Forms"
+  identifier    = "forms"
+  signing_alg   = "RS256"
+  token_dialect = "access_token"
+}
