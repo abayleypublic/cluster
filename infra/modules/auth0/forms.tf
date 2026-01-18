@@ -13,7 +13,7 @@ resource "auth0_flow_vault_connection" "auth0_connection" {
     client_secret = auth0_client_credentials.auth0_forms_client_credentials.client_secret
     domain        = var.auth0_domain
     type          = "OAUTH_APP"
-    audience      = auth0_resource_server.forms_api.identifier
+    audience      = data.auth0_resource_server.management_api.identifier
   }
 }
 

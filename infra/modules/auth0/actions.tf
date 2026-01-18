@@ -42,7 +42,7 @@ resource "auth0_action" "render_user_details_page" {
 
   code = <<-EOT
     exports.onExecutePostLogin = async (event, api) => {
-      if (!event.user.name) {
+      if (!event.user.name || event.user.name === event.user.email) {
         api.prompt.render('${auth0_form.user_details.id}');
       }
     };

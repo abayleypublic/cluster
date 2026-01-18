@@ -23,7 +23,7 @@ resource "auth0_client" "staging_client" {
 
 resource "auth0_client_grant" "staging_api_grant" {
   client_id = auth0_client.staging_client.id
-  audience  = auth0_resource_server.staging_api.identifier
+  audience  = auth0_resource_server.austinbayley_co_uk_api.identifier
   scopes    = ["read:users"]
 }
 
@@ -57,7 +57,7 @@ resource "auth0_client" "production_client" {
 
 resource "auth0_client_grant" "production_api_grant" {
   client_id = auth0_client.production_client.id
-  audience  = auth0_resource_server.production_api.identifier
+  audience  = auth0_resource_server.austinbayley_co_uk_api.identifier
   scopes    = ["read:users"]
 }
 
@@ -92,7 +92,14 @@ resource "auth0_client" "forms_client" {
 
 resource "auth0_client_grant" "forms_api_grant" {
   client_id = auth0_client.forms_client.id
-  audience  = auth0_resource_server.forms_api.identifier
-  scopes    = ["read:users", "update:users", "create:users", "read:users_app_metadata", "update:users_app_metadata", "create:users_app_metadata"]
+  audience  = data.auth0_resource_server.management_api.identifier
+  scopes = [
+    "read:users",
+    "update:users",
+    "create:users",
+    "read:users_app_metadata",
+    "update:users_app_metadata",
+    "create:users_app_metadata"
+  ]
 }
 
