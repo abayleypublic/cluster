@@ -110,6 +110,8 @@ resource "auth0_connection" "production_google_oauth2" {
   strategy = "google-oauth2"
 
   options {
-    scopes = ["email", "profile"]
+    client_id     = var.google_oauth_client_id
+    client_secret = var.google_oauth_client_secret
+    scopes        = ["email", "profile"]
   }
 }

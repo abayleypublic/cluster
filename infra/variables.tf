@@ -27,6 +27,7 @@ variable "region" {
 variable "cloudflare_api_key" {
   description = "Cloudflare API key with permissions to manage DNS records."
   type        = string
+  sensitive   = true
 }
 
 variable "gcp_project_id" {
@@ -49,6 +50,7 @@ variable "mongodb_atlas_public_key" {
 variable "mongodb_atlas_private_key" {
   description = "Private key for MongoDB Atlas API."
   type        = string
+  sensitive   = true
 }
 
 variable "mongodb_atlas_org_id" {
@@ -65,14 +67,29 @@ variable "auth0_domain" {
 variable "auth0_client_id" {
   description = "Auth0 client ID."
   type        = string
+  sensitive   = true
 }
 
 variable "auth0_client_secret" {
   description = "Auth0 client secret."
   type        = string
+  sensitive   = true
 }
 
 variable "grafana_access_token" {
   description = "Grafana access token."
   type        = string
+  sensitive   = true
+}
+
+variable "google_oauth_client_id" {
+  description = "Google OAuth Client ID for Auth0 (create manually in GCP Console)."
+  type        = string
+  sensitive   = true
+}
+
+variable "google_oauth_client_secret" {
+  description = "Google OAuth Client Secret for Auth0 (create manually in GCP Console)."
+  type        = string
+  sensitive   = true
 }

@@ -111,8 +111,10 @@ module "mongodb" {
 }
 
 module "auth0" {
-  source       = "./modules/auth0"
-  auth0_domain = var.auth0_domain
+  source                     = "./modules/auth0"
+  auth0_domain               = var.auth0_domain
+  google_oauth_client_id     = var.google_oauth_client_id
+  google_oauth_client_secret = var.google_oauth_client_secret
 }
 
 module "grafana" {
