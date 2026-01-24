@@ -9,7 +9,7 @@ resource "google_artifact_registry_repository" "docker_repository" {
     immutable_tags = true
   }
 
-  cleanup_policy_dry_run = true
+  cleanup_policy_dry_run = false
 
   cleanup_policies {
     action = "KEEP"
