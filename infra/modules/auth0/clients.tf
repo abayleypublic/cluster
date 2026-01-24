@@ -10,7 +10,8 @@ resource "auth0_client" "staging_client" {
     "https://activity.stg.austinbayley.co.uk/oauth2/callback",
     "https://roam.stg.austinbayley.co.uk/oauth2/callback",
     "https://temporal.austinbayley.co.uk/auth/sso/callback",
-    "https://queue.stg.austinbayley.co.uk/oauth2/callback"
+    "https://queue.stg.austinbayley.co.uk/oauth2/callback",
+    "https://account.stg.austinbayley.co.uk/oauth2/callback"
   ]
   allowed_logout_urls = ["https://*.stg.austinbayley.co.uk"]
   web_origins         = ["https://*.stg.austinbayley.co.uk"]
@@ -44,7 +45,8 @@ resource "auth0_client" "production_client" {
   app_type    = "regular_web"
   callbacks = [
     "https://activity.austinbayley.co.uk/oauth2/callback",
-    "https://queue.austinbayley.co.uk/oauth2/callback"
+    "https://queue.austinbayley.co.uk/oauth2/callback",
+    "https://account.austinbayley.co.uk/oauth2/callback"
   ]
   allowed_logout_urls = ["https://*.austinbayley.co.uk"]
   web_origins         = ["https://*.austinbayley.co.uk"]
