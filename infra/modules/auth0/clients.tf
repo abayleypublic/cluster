@@ -105,3 +105,31 @@ resource "auth0_client_grant" "forms_api_grant" {
   ]
 }
 
+# ==========
+# Account
+# =========
+
+resource "auth0_client" "account_client" {
+  name            = "Account"
+  description     = "Account OIDC client"
+  app_type        = "non_interactive"
+  oidc_conformant = true
+
+  jwt_configuration {
+    alg = "RS256"
+  }
+}
+
+resource "auth0_client_grant" "account_api_grant" {
+  client_id = auth0_client.account_client.id
+  audience  = data.auth0_resource_server.management_api.identifier
+  scopes = [
+    "read:users",
+    "update:users",
+    "delete:users",
+    "read:users_app_metadata",
+    "update:users_app_metadata",
+    "create:users_app_metadata"
+  ]
+}
+
