@@ -40,7 +40,7 @@ spec:
       recurse: true
       include: '{*application.yaml,*projects/*.yaml}'
   destination:
-    server: https://kube.austinbayley.co.uk:6443
+    server: https://kubernetes.default.svc
     namespace: argocd
   syncPolicy:
     automated:
