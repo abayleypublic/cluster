@@ -7,6 +7,7 @@ resource "google_project_service" "services" {
     "sts.googleapis.com",
     "apikeys.googleapis.com",
     "geocoding-backend.googleapis.com",
+    "aiplatform.googleapis.com",
   ])
   project            = var.project_id
   service            = each.key

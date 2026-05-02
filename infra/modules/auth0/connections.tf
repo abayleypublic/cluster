@@ -66,7 +66,7 @@ resource "auth0_connection" "production_db" {
     password_policy        = "good"
     brute_force_protection = true
     strategy_version       = 2
-    disable_signup         = false
+    disable_signup         = true
     requires_username      = false
 
     validation {
