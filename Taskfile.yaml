@@ -107,7 +107,7 @@ tasks:
         fi
 
         SECRET_B64=$(oci secrets secret-bundle get-secret-bundle-by-name \
-          --secret-name kubeconfig \
+          --secret-name kubeconfig_2 \
           --vault-id "$VAULT_ID" \
           --query 'data."secret-bundle-content".content' \
           --raw-output)
