@@ -43,6 +43,18 @@ resource "oci_vault_secret" "argocd_github_client_secret" {
   }
 }
 
+resource "oci_vault_secret" "kargo_github_app_private_key" {
+  compartment_id = oci_identity_compartment.cluster.id
+  key_id         = oci_kms_key.master_encryption_key.id
+  secret_name    = "kargo_github_app_private_key"
+  vault_id       = oci_kms_vault.secret_vault.id
+
+  secret_content {
+    content_type = "BASE64"
+    content      = "UkVQTEFDRV9NRQ=="
+  }
+}
+
 resource "oci_vault_secret" "cloudflare_api_key" {
   compartment_id = oci_identity_compartment.cluster.id
   key_id         = oci_kms_key.master_encryption_key.id
